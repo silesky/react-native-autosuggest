@@ -30,12 +30,12 @@ const termsArr = [
 export default class AutoSuggest extends Component {
   constructor(props) {
     super(props);
+    this.listHeight = 40;
     this.state = {
       results: [],
       currentInput: null,
       isRemoving: null,
-
-
+      listHeight: new Animated.Value(this.listHeight)
     };
 
   }
@@ -51,10 +51,18 @@ export default class AutoSuggest extends Component {
           if (findMatch(eachTerm, currentInput)) return eachTerm
       }))
       console.log(results, this.state.results);
-      this.setState({isRemoving: results.length ? results.length <= this.state.results.length : null})
+
+      this.setState({isRemoving: results.length < this.state.results.length})
       this.setState({ results })
     })()
   }
+  onRemoving() {
+       Animated.timing(this.state.listHeight, {
+           toValue  : this.listHeight * this.state.results.length - 1,
+           duration : 1000, 
+       }).start();
+  }
+  
   render() {
     return (
 
@@ -62,20 +70,20 @@ export default class AutoSuggest extends Component {
           <TextInput
               spellCheck={false}
               defaultValue={this.state.currentInput}
-              onBlur={() => console.log('blur') /* this.clearTerms() */}
+              onBlur={() => this.clearTerms() }
               onFocus={() => this.addAllTerms()}
               onChangeText={(el) => this.searchTerms(el)}
               placeholder="Gift"
               style={styles.text_input}
               />
-          <View>
+          <Animated.View>
             <ListView
               initialListSize={15}
               enableEmptySections
               dataSource={ds.cloneWithRows(this.state.results)}
               renderRow={(rowData, sectionId, rowId, highlightRow) =>  
                       <RowWrapper
-                        isRemoving={this.state.isRemoving}
+                      isRemoving={this.state.isRemoving}
                       >
                         <TouchableOpacity
                           activeOpacity={0.5 /* when you touch it the text color grimaces */}
@@ -87,7 +95,7 @@ export default class AutoSuggest extends Component {
                       </RowWrapper>
           }
               />
-        </View>
+        </Animated.View>
     </View>
 
     );
@@ -110,12 +118,11 @@ var styles = StyleSheet.create({
 class RowWrapper extends Component {
   constructor(props) {
     super(props)
-    this.defaultRowHeight = 40;
+  
     this.defaultTransitionDuration = 500;
     this.state = { 
       opacity: new Animated.Value(0),
-      rowHeight: new Animated.Value(this.defaultRowHeight)
-  }
+    }
   }
  componentDidMount() {
     Animated.timing(this.state.opacity, {
@@ -123,31 +130,24 @@ class RowWrapper extends Component {
       duration: this.defaultTransitionDuration,
     }).start();
   }
-  componentWillReceiveProps(nextProps) {
-    console.log(nextProps.isRemoving);
-    // using ugly conditionals bc if nextProps is null, I want to do nothing
-       if (nextProps.isRemoving === true) {
-           this.onRemoving(nextProps.onRemoving);
-       } else if (nextProps.isRemoving === false) {
-           this.resetHeight(); // we need this for iOS because iOS does not reset list row style properties
-       }
+ componentWillReceiveProps() {
+   if (this.props.isRemoving) {
+    Animated.sequence([
+      Animated.timing(this.state.opacity, {
+        toValue: 0.75,
+        duration: 100,
+      }),
+      Animated.timing(this.state.opacity, {
+      toValue: 1,
+      duration: 200,
+      })
+    ]).start();
    }
-   onRemoving(callback) {
-       Animated.timing(this.state.rowHeight, {
-           toValue  : 0,
-           duration : this.defaultTransitionDuration, 
-       }).start(callback);
-   }
-   resetHeight() {
-       Animated.timing(this.state.rowHeight, {
-           toValue  : this.defaultRowHeight,
-           duration : 0
-       }).start();
-   }
+ }
+
   render() {
     return (
       <Animated.View style={[{
-        height: this.state.rowHeight,
         opacity: this.state.opacity
         }, RowWrapperStyles.eachRow]}
       >
