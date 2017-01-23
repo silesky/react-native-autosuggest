@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 import { debounce } from 'throttle-debounce';
 
+
 const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 const termsArr = [
   "Birthday",
@@ -32,17 +33,12 @@ export default class AutoSuggest extends Component {
     this.state = {
       results: [],
       currentInput: null,
-      opacity: new Animated.Value(0),
-      
+
+
     };
 
   }
-  componentDidMount() {
-    Animated.timing(this.state.opacity, {
-      toValue:  1, 
-      duration: 2000,
-    }).start();
-  }
+
   setCurrentInput(currentInput) { this.setState({ currentInput }) }
   clearTerms() { this.setState({ results: [] }) }
   addAllTerms() { this.setState({ results: termsArr }) }
@@ -53,18 +49,9 @@ export default class AutoSuggest extends Component {
       this.setState({ results })
     })()
   }
-  renderSeperator() {
-    return (<View
-        style={{
-          flex: 1,
-          height:  4,
-          backgroundColor: '#3B5998'
-        }}
-      />)
-  }
   render() {
-    console.log('opacity', this.state.opacity._value)
     return (
+
       <View style={styles.container}>
           <TextInput
               spellCheck={false}
@@ -79,24 +66,21 @@ export default class AutoSuggest extends Component {
             <ListView
               initialListSize={15}
               enableEmptySections
-              renderSeperator={this.renderSeperator}
               dataSource={ds.cloneWithRows(this.state.results)}
               renderRow={(rowData, sectionId, rowId, highlightRow) =>
                 <TouchableOpacity
                   activeOpacity={0.5 /* when you touch it the text color grimaces */}
                   style={styles.container}
-                  onPress={(el) => {
-                    this.setCurrentInput('hello');
-                    this.setCurrentInput(this.state.results[rowId])
-                  }}>
-                  <Animated.View style={{opacity: this.state.opacity, paddingBottom: 5, paddingTop: 5, borderColor: 'lightgrey', borderBottomWidth: 1, borderRightWidth: 1, borderLeftWidth: 1}}>
-                    <Text style={{fontSize: 18, lineHeight: 30}}>{rowData}</Text>
-                    </Animated.View>
+                  onPress={() => this.setCurrentInput(this.state.results[rowId])}
+                  >
+                      <RowWrapper>
+                        <Text style={{fontSize: 18, lineHeight: 30}}>{rowData}</Text>
+                      </RowWrapper>
                 </TouchableOpacity> }
               />
         </View>
     </View>
-         
+
     );
 
   }
@@ -112,3 +96,35 @@ var styles = StyleSheet.create({
     height: 40,
   }
 });
+
+
+class RowWrapper extends Component {
+  constructor(props) {
+    super(props)
+    this.state = { opacity: new Animated.Value(0) }
+  }
+ componentDidMount() {
+    Animated.timing(this.state.opacity, {
+      toValue: 1,
+      duration: 2000,
+    }).start();
+  }
+  render() {
+    return (
+      <Animated.View style={[{opacity: this.state.opacity}, RowWrapperStyles.eachRow]}>
+        {this.props.children}
+      </Animated.View>
+    )
+  }
+}
+
+const RowWrapperStyles = StyleSheet.create({
+  eachRow: {
+    paddingBottom: 5,
+    paddingTop: 5,
+    borderColor: 'lightgrey',
+    borderBottomWidth: 1,
+    borderRightWidth: 1,
+    borderLeftWidth: 1
+  }
+})
