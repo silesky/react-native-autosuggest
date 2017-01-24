@@ -53,6 +53,7 @@ class AutoSuggest extends Component {
   // copy the value back to the input
   onItemClick(currentInput) {
     this.setCurrentInput(currentInput);
+    this.clearTerms();
   }
   render() {
     return (
