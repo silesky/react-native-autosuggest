@@ -11,7 +11,7 @@ import {
   View,
 
 } from 'react-native';
-import { debounce } from 'throttle-debounce';
+import { debounce } from './../node_modules/throttle-debounce';
 
 const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
