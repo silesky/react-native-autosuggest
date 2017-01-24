@@ -66,7 +66,7 @@ export default class AutoSuggest extends Component {
   render() {
     return (
 
-      <View style={styles.container}>
+      <View style={AppContainerStyles.container}>
           <TextInput
               spellCheck={false}
               defaultValue={this.state.currentInput}
@@ -74,7 +74,7 @@ export default class AutoSuggest extends Component {
               onFocus={() => this.addAllTerms()}
               onChangeText={(el) => this.searchTerms(el)}
               placeholder="Gift"
-              style={styles.text_input}
+              style={AppContainerStyles.text_input}
               />
           <Animated.View>
             <ListView
@@ -87,7 +87,7 @@ export default class AutoSuggest extends Component {
                       >
                         <TouchableOpacity
                           activeOpacity={0.5 /* when you touch it the text color grimaces */}
-                          style={styles.container}
+                          style={AppContainerStyles.container}
                           onPress={() => this.setCurrentInput(this.state.results[rowId])}
                           >
                             <Text style={{fontSize: 18, lineHeight: 30}}>{rowData}</Text>
@@ -103,7 +103,7 @@ export default class AutoSuggest extends Component {
   }
 }
 
-var styles = StyleSheet.create({
+const AppContainerStyles = StyleSheet.create({
   container: {
     width: 250,
     backgroundColor: '#FFFFFF',
