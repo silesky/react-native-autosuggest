@@ -1,0 +1,22 @@
+{
+  "name": "react-native-autosuggest",
+  "version": "0.0.1",
+  "description": "an autosuggest text input implementation for react native.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/silesky/react-native-autosuggest.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/silesky/react-native-autosuggest/issues"
+  },
+  "homepage": "https://github.com/silesky/react-native-autosuggest#readme",
+  "dependencies": {
+    "throttle-debounce": "^1.0.1"
+  }
+}
