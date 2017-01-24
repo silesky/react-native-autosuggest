@@ -28,21 +28,20 @@ class AutoSuggest extends Component {
     };
 
   }
-
+    
+    
   setCurrentInput(currentInput) { this.setState({ currentInput }) }
   clearTerms() { this.setState({ results: [] }) }
   addAllTerms() { this.setState({ results: this.props.terms }) }
   searchTerms(currentInput) {
-    this.setState({ currentInput });
+    this.setState({currentInput});
     debounce(200, () => {
       const findMatch = (term1, term2) => term1.toLowerCase().indexOf(term2.toLowerCase()) > -1
       const results = this.props.terms.filter((eachTerm => {
           if (findMatch(eachTerm, currentInput)) return eachTerm
       }))
-      console.log(results, this.state.results);
-
       this.setState({isRemoving: results.length < this.state.results.length})
-      this.setState({ results })
+      this.setState({results: currentInput ? results : [] }) // if input is empty don't show any results
     })()
   }
   onRemoving() {
@@ -51,16 +50,16 @@ class AutoSuggest extends Component {
            duration : 1000, 
        }).start();
   }
-  
+  // copy the value back to the input
+  onItemClick(currentInput) {
+    this.setCurrentInput(currentInput);
+  }
   render() {
     return (
-
       <View style={AppContainerStyles.container}>
           <TextInput
               spellCheck={false}
               defaultValue={this.state.currentInput}
-              onBlur={() => this.clearTerms() }
-              onFocus={() => this.addAllTerms()}
               onChangeText={(el) => this.searchTerms(el)}
               placeholder="Gift"
               style={AppContainerStyles.text_input}
@@ -77,7 +76,7 @@ class AutoSuggest extends Component {
                         <TouchableOpacity
                           activeOpacity={0.5 /* when you touch it the text color grimaces */}
                           style={AppContainerStyles.container}
-                          onPress={() => this.setCurrentInput(this.state.results[rowId])}
+                          onPress={() => this.onItemClick(this.state.results[rowId])}
                           >
                             <Text style={{fontSize: 18, lineHeight: 30}}>{rowData}</Text>
                           </TouchableOpacity>
