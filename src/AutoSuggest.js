@@ -10,20 +10,18 @@ import {
   TouchableOpacity,
   View,
   Keyboard,
-  TouchableWithoutFeedback
+  TouchableWithoutFeedback,
+  Button,
 } from 'react-native';
 import { debounce } from 'throttle-debounce';
-
-const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
-
-
+const rnVersion = require('react-native/package.json').version;
+const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
 class AutoSuggest extends Component {
   constructor(props) {
     super(props);
     this.clearTerms = this.clearTerms.bind(this);
     this.searchTerms = this.searchTerms.bind(this);
     this.setCurrentInput = this.setCurrentInput.bind(this);
-    this.onDismiss = this.onDismiss.bind(this);
     this.onRemoving = this.onRemoving.bind(this);
     this.onItemClick = this.onItemClick.bind(this);
     this.listHeight = 40;
@@ -35,21 +33,33 @@ class AutoSuggest extends Component {
     };
 
   }
+    componentDidMount() {
+      // when user hits the return button, clear the terms
+      Keyboard.addListener('keyboardDidHide', () => this.clearTerms())
+    }
     
-    
-  setCurrentInput(currentInput) { this.setState({ currentInput }) }
+  setCurrentInput(currentInput) { 
+    this.setState({ currentInput }) 
+    }
+
+  clearInputAndTerms() { 
+    this.refs.TI.clear(); 
+    this.clearTerms();
+  }  
   clearTerms() { this.setState({ results: [] }) }
   addAllTerms() { this.setState({ results: this.props.terms }) }
   searchTerms(currentInput) {
     this.setState({currentInput});
-    debounce(200, () => {
+    debounce(300, () => {
       const findMatch = (term1, term2) => term1.toLowerCase().indexOf(term2.toLowerCase()) > -1
       const results = this.props.terms.filter((eachTerm => {
           if (findMatch(eachTerm, currentInput)) return eachTerm
       }))
       this.setState({isRemoving: results.length < this.state.results.length})
-      this.setState({results: currentInput ? results : [] }) // if input is empty don't show any results
+      const inputIsEmpty = !!(currentInput.length <= 0)
+      this.setState({results: inputIsEmpty ? []  : results}) // if input is empty don't show any results
     })()
+    
   }
   onRemoving() {
        Animated.timing(this.state.listHeight, {
@@ -57,11 +67,7 @@ class AutoSuggest extends Component {
            duration : 1000, 
        }).start();
   }
-  onDismiss() {
-   this.clearTerms();
-   console.log('dismiss!');
-
-  }
+  
   // copy the value back to the input
   onItemClick(currentInput) {
     this.setCurrentInput(currentInput);
@@ -69,28 +75,38 @@ class AutoSuggest extends Component {
   }
   render() {
     return (
-      <View style={AppContainerStyles.container}>
+      <View style={{
+          width: 300,
+          backgroundColor: 'white'
+        }}>
+      <View style={{flexDirection: 'row', justifyContent: 'center'}}>
           <TextInput
-            
+              ref="TI"
               spellCheck={false}
               defaultValue={this.state.currentInput}
               onChangeText={(el) => this.searchTerms(el)}
-              placeholder="Gift"
-              style={AppContainerStyles.text_input}
+              placeholder="Please Enter a Gift."
+              style={{
+                backgroundColor: 'lightgrey',
+                height: 40,
+                paddingLeft: 5,
+                paddingRight: 5,
+                flex: 5
+            }}
               />
-          <Animated.View>
+              <Button title="Clear" onPress={() => this.clearInputAndTerms()} />
+              </View>
+          <Animated.View >
             <ListView
-              keyboardShouldPersistTaps={true}
+              keyboardShouldPersistTaps={rnVersion >="0.4.0" ? "always" : true}
               initialListSize={15}
               enableEmptySections
               dataSource={ds.cloneWithRows(this.state.results)}
               renderRow={(rowData, sectionId, rowId, highlightRow) =>  
-                      <RowWrapper
-                      isRemoving={this.state.isRemoving}
+                      <RowWrapper                      isRemoving={this.state.isRemoving}
                       >
                         <TouchableOpacity
                           activeOpacity={0.5 /* when you touch it the text color grimaces */}
-                          style={AppContainerStyles.container}
                           onPress={() => this.onItemClick(this.state.results[rowId])}
                           >
                             <Text style={{fontSize: 18, lineHeight: 30}}>{rowData}</Text>
@@ -107,16 +123,6 @@ class AutoSuggest extends Component {
 }
 
 
-const AppContainerStyles = StyleSheet.create({
-  container: {
-    width: 250,
-    backgroundColor: '#FFFFFF',
-  },
-  text_input: {
-    backgroundColor: 'lightgrey',
-    height: 40,
-  }
-});
 
 
 class RowWrapper extends Component {
@@ -147,18 +153,25 @@ class RowWrapper extends Component {
       })
     ]).start();
    }
+  
  }
 
   render() {
     return (
-       <TouchableWithoutFeedback onPress={Keyboard.dismiss()}>
-      <Animated.View style={[{
+         <TouchableWithoutFeedback>
+        <Animated.View style={[{
+        paddingLeft: 5,
+        paddingRight: 5,
         opacity: this.state.opacity
         }, RowWrapperStyles.eachRow]}
       >
+    
+  
         {this.props.children}
-      </Animated.View>
-       </TouchableWithoutFeedback>
+
+     
+             </Animated.View>
+               </TouchableWithoutFeedback>
     )
   }
 }
