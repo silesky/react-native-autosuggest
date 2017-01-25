@@ -1,22 +1,80 @@
 {
-  "name": "react-native-autosuggest",
-  "version": "0.0.1",
-  "description": "an autosuggest text input implementation for react native.",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "_args": [
+    [
+      {
+        "hosted": {
+          "directUrl": "https://raw.githubusercontent.com/silesky/react-native-autosuggest/master/package.json",
+          "gitUrl": "git://github.com/silesky/react-native-autosuggest.git",
+          "httpsUrl": "git+https://github.com/silesky/react-native-autosuggest.git",
+          "shortcut": "github:silesky/react-native-autosuggest",
+          "ssh": "git@github.com:silesky/react-native-autosuggest.git",
+          "sshUrl": "git+ssh://git@github.com/silesky/react-native-autosuggest.git",
+          "type": "github"
+        },
+        "name": "react-native-autosuggest",
+        "raw": "react-native-autosuggest@git+https://github.com/silesky/react-native-autosuggest.git",
+        "rawSpec": "git+https://github.com/silesky/react-native-autosuggest.git",
+        "scope": null,
+        "spec": "git+https://github.com/silesky/react-native-autosuggest.git",
+        "type": "hosted"
+      },
+      "/Users/ssilesky/projects/giftr/mobile"
+    ]
+  ],
+  "_from": "git+https://github.com/silesky/react-native-autosuggest.git",
+  "_id": "react-native-autosuggest@0.0.1",
+  "_inCache": true,
+  "_installable": true,
+  "_location": "/react-native-autosuggest",
+  "_phantomChildren": {},
+  "_requested": {
+    "hosted": {
+      "directUrl": "https://raw.githubusercontent.com/silesky/react-native-autosuggest/master/package.json",
+      "gitUrl": "git://github.com/silesky/react-native-autosuggest.git",
+      "httpsUrl": "git+https://github.com/silesky/react-native-autosuggest.git",
+      "shortcut": "github:silesky/react-native-autosuggest",
+      "ssh": "git@github.com:silesky/react-native-autosuggest.git",
+      "sshUrl": "git+ssh://git@github.com/silesky/react-native-autosuggest.git",
+      "type": "github"
+    },
+    "name": "react-native-autosuggest",
+    "raw": "react-native-autosuggest@git+https://github.com/silesky/react-native-autosuggest.git",
+    "rawSpec": "git+https://github.com/silesky/react-native-autosuggest.git",
+    "scope": null,
+    "spec": "git+https://github.com/silesky/react-native-autosuggest.git",
+    "type": "hosted"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/silesky/react-native-autosuggest.git"
-  },
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "git+https://github.com/silesky/react-native-autosuggest.git#0c364d5e0561d3c83f1f4dbe967e7288d23923e3",
+  "_shasum": "aded48cc3d286e02324659f16363c4e286f9e55f",
+  "_shrinkwrap": null,
+  "_spec": "react-native-autosuggest@git+https://github.com/silesky/react-native-autosuggest.git",
+  "_where": "/Users/ssilesky/projects/giftr/mobile",
   "author": "",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/silesky/react-native-autosuggest/issues"
   },
-  "homepage": "https://github.com/silesky/react-native-autosuggest#readme",
   "dependencies": {
     "throttle-debounce": "^1.0.1"
-  }
+  },
+  "description": "an autosuggest text input implementation for react native.",
+  "devDependencies": {},
+  "gitHead": "0c364d5e0561d3c83f1f4dbe967e7288d23923e3",
+  "homepage": "https://github.com/silesky/react-native-autosuggest#readme",
+  "main": "index.js",
+  "name": "react-native-autosuggest",
+  "optionalDependencies": {},
+  "readme": "# AutoSuggest Input \n![alt tag](https://media.giphy.com/media/26xBrNDd3FQ07U27m/source.gif)",
+  "readmeFilename": "README.md",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/silesky/react-native-autosuggest.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "version": "0.0.1"
 }
