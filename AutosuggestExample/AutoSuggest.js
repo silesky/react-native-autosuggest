@@ -1,3 +1,4 @@
+/* EXAMPLE !!!!!!!!!!!!!!!!!!!!!!!! */
 import React, {
   Component
 } from 'React';
@@ -36,8 +37,7 @@ export default class AutoSuggest extends Component {
       currentInput: null,
       isRemoving: null,
       listHeight: new Animated.Value(this.listHeight)
-    };
-
+    }
   }
 
   setCurrentInput(currentInput) { this.setState({ currentInput }) }
