@@ -8,8 +8,7 @@ import {
   TextInput,
   ListView,
   TouchableOpacity,
-  View,
-
+  View
 } from 'react-native';
 import { debounce } from 'throttle-debounce';
 
@@ -19,9 +18,15 @@ const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 class AutoSuggest extends Component {
   constructor(props) {
     super(props);
+    this.clearTerms = this.clearTerms.bind(this);
+    this.searchTerms = this.searchTerms.bind(this);
+    this.setCurrentInput = this.setCurrentInput.bind(this);
+    this.onDismiss = this.onDismiss.bind(this);
+    this.onRemoving = this.onRemoving.bind(this);
+    this.onItemClick = this.onItemClick.bind(this);
     this.listHeight = 40;
     this.state = {
-      results: [],
+      results: this.props.terms,
       currentInput: null,
       isRemoving: null,
       listHeight: new Animated.Value(this.listHeight)
@@ -49,6 +54,11 @@ class AutoSuggest extends Component {
            toValue  : this.listHeight * this.state.results.length - 1,
            duration : 1000, 
        }).start();
+  }
+  onDismiss() {
+   this.clearTerms();
+   console.log('dismiss!');
+
   }
   // copy the value back to the input
   onItemClick(currentInput) {
