@@ -1,6 +1,6 @@
 import React, {
   Component
-} from './../../react';
+} from 'react'
 import {
   Animated,
   StyleSheet,
@@ -12,7 +12,7 @@ import {
   Keyboard,
   TouchableWithoutFeedback
 } from 'react-native';
-import { debounce } from './../node_modules/throttle-debounce';
+import { debounce } from 'throttle-debounce';
 
 const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
