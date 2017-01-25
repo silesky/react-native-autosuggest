@@ -8,7 +8,9 @@ import {
   TextInput,
   ListView,
   TouchableOpacity,
-  View
+  View,
+  Keyboard,
+  TouchableWithoutFeedback
 } from 'react-native';
 import { debounce } from 'throttle-debounce';
 
@@ -69,6 +71,7 @@ class AutoSuggest extends Component {
     return (
       <View style={AppContainerStyles.container}>
           <TextInput
+            
               spellCheck={false}
               defaultValue={this.state.currentInput}
               onChangeText={(el) => this.searchTerms(el)}
@@ -77,6 +80,7 @@ class AutoSuggest extends Component {
               />
           <Animated.View>
             <ListView
+              keyboardShouldPersistTaps={true}
               initialListSize={15}
               enableEmptySections
               dataSource={ds.cloneWithRows(this.state.results)}
@@ -147,12 +151,14 @@ class RowWrapper extends Component {
 
   render() {
     return (
+       <TouchableWithoutFeedback onPress={Keyboard.dismiss()}>
       <Animated.View style={[{
         opacity: this.state.opacity
         }, RowWrapperStyles.eachRow]}
       >
         {this.props.children}
       </Animated.View>
+       </TouchableWithoutFeedback>
     )
   }
 }
