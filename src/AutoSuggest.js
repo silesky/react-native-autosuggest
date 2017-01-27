@@ -1,6 +1,4 @@
-import React, {
-  Component
-} from 'react'
+import React, { Component } from 'react'
 import {
   Animated,
   StyleSheet,
@@ -16,7 +14,16 @@ import {
 import { debounce } from 'throttle-debounce';
 const rnVersion = require('react-native/package.json').version;
 const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
-class AutoSuggest extends Component {
+
+
+export default class AutoSuggest extends Component {
+static propTypes = {
+    TextInputStyles: React.PropTypes.object,
+    placeholder: React.PropTypes.string,
+    terms: React.PropTypes.array,
+  }
+  static defaultProps = {
+  }
   constructor(props) {
     super(props);
     this.clearTerms = this.clearTerms.bind(this);
@@ -182,18 +189,3 @@ const RowWrapperStyles = StyleSheet.create({
     paddingTop: 5,
   }
 })
-AutoSuggest.defaultProps = {
-  terms: [
-  "Birthday",
-  "Graduation",
-  "Anniversary",
-  "Homecoming",
-  "Confirmation",
-  "Bar Mitzvah",
-  "Baby Shower",
-  "House Warming",
-  "Secret Santa",
-  "Chanukah"
-  ]
-}
-module.exports = AutoSuggest;
