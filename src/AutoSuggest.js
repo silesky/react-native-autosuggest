@@ -17,13 +17,12 @@ const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
 
 
 export default class AutoSuggest extends Component {
-static propTypes = {
+  static propTypes = {
     TextInputStyles: React.PropTypes.object,
     placeholder: React.PropTypes.string,
     terms: React.PropTypes.array,
   }
-  static defaultProps = {
-  }
+  static defaultProps = {}
   constructor(props) {
     super(props);
     this.clearTerms = this.clearTerms.bind(this);
@@ -40,41 +39,41 @@ static propTypes = {
     };
 
   }
-    componentDidMount() {
-      // when user hits the return button, clear the terms
-      Keyboard.addListener('keyboardDidHide', () => this.clearTerms())
-    }
-    
-  setCurrentInput(currentInput) { 
-    this.setState({ currentInput }) 
-    }
+  componentDidMount() {
+    // when user hits the return button, clear the terms
+    Keyboard.addListener('keyboardDidHide', () => this.clearTerms())
+  }
 
-  clearInputAndTerms() { 
-    this.refs.TI.clear(); 
+  setCurrentInput(currentInput) {
+    this.setState({ currentInput })
+  }
+
+  clearInputAndTerms() {
+    this.refs.TI.clear();
     this.clearTerms();
-  }  
+  }
   clearTerms() { this.setState({ results: [] }) }
   addAllTerms() { this.setState({ results: this.props.terms }) }
   searchTerms(currentInput) {
-    this.setState({currentInput});
+    this.setState({ currentInput });
     debounce(300, () => {
       const findMatch = (term1, term2) => term1.toLowerCase().indexOf(term2.toLowerCase()) > -1
       const results = this.props.terms.filter((eachTerm => {
-          if (findMatch(eachTerm, currentInput)) return eachTerm
+        if (findMatch(eachTerm, currentInput)) return eachTerm
       }))
-      this.setState({isRemoving: results.length < this.state.results.length})
+      this.setState({ isRemoving: results.length < this.state.results.length })
       const inputIsEmpty = !!(currentInput.length <= 0)
-      this.setState({results: inputIsEmpty ? []  : results}) // if input is empty don't show any results
+      this.setState({ results: inputIsEmpty ? [] : results }) // if input is empty don't show any results
     })()
-    
+
   }
   onRemoving() {
-       Animated.timing(this.state.listHeight, {
-           toValue  : this.listHeight * this.state.results.length - 1,
-           duration : 1000, 
-       }).start();
+    Animated.timing(this.state.listHeight, {
+      toValue: this.listHeight * this.state.results.length - 1,
+      duration: 1000,
+    }).start();
   }
-  
+
   // copy the value back to the input
   onItemClick(currentInput) {
     this.setCurrentInput(currentInput);
@@ -135,37 +134,37 @@ static propTypes = {
 class RowWrapper extends Component {
   constructor(props) {
     super(props)
-  
+
     this.defaultTransitionDuration = 500;
-    this.state = { 
+    this.state = {
       opacity: new Animated.Value(0),
     }
   }
- componentDidMount() {
+  componentDidMount() {
     Animated.timing(this.state.opacity, {
       toValue: 1,
       duration: this.defaultTransitionDuration,
     }).start();
   }
- componentWillReceiveProps() {
-   if (this.props.isRemoving) {
-    Animated.sequence([
+  componentWillReceiveProps() {
+    if (this.props.isRemoving) {
+      Animated.sequence([
       Animated.timing(this.state.opacity, {
-        toValue: 0.75,
-        duration: 100,
-      }),
+          toValue: 0.75,
+          duration: 100,
+        }),
       Animated.timing(this.state.opacity, {
-      toValue: 1,
-      duration: 200,
-      })
+          toValue: 1,
+          duration: 200,
+        })
     ]).start();
-   }
-  
- }
+    }
+
+  }
 
   render() {
     return (
-         <TouchableWithoutFeedback>
+      <TouchableWithoutFeedback>
         <Animated.View style={[{
         paddingLeft: 5,
         paddingRight: 5,
