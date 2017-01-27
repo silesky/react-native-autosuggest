@@ -1,2 +1,2 @@
-const AutoSuggest = require('./src/AutoSuggest')
-module.exports = AutoSuggest;
+import AutoSuggest from './src/AutoSuggest';
+export default AutoSuggest; 
