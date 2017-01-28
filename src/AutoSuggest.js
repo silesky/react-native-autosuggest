@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, PropTypes } from 'react'
 import {
   Animated,
   StyleSheet,
@@ -18,11 +18,27 @@ const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
 
 export default class AutoSuggest extends Component {
   static propTypes = {
-    TextInputStyles: React.PropTypes.object,
-    placeholder: React.PropTypes.string,
-    terms: React.PropTypes.array,
+    textInputStyles : PropTypes.object,
+    placeholder: PropTypes.string,
+    terms: PropTypes.array,
+    clearBtnVisibility: PropTypes.bool,
   }
-  static defaultProps = {}
+
+  static defaultProps = {
+    placeholder: '',
+    clearBtnVisibility: true
+  }
+  
+   getInitialStyles() {
+      return {
+        textInputStyles : {
+            backgroundColor: 'lightgrey',
+            height: 40,
+            paddingLeft: 5,
+            paddingRight: 5,
+            flex: 5
+        }}
+  }
   constructor(props) {
     super(props);
     this.clearTerms = this.clearTerms.bind(this);
@@ -79,7 +95,9 @@ export default class AutoSuggest extends Component {
     this.setCurrentInput(currentInput);
     this.clearTerms();
   }
+
   render() {
+    const combinedTextInputStyles = {...this.props.textInputStyles , ...this.getInitialStyles().textInputStyles }
     return (
       <View style={{
           width: 300,
@@ -91,18 +109,23 @@ export default class AutoSuggest extends Component {
               spellCheck={false}
               defaultValue={this.state.currentInput}
               onChangeText={(el) => this.searchTerms(el)}
-              placeholder="Please Enter a Gift."
-              style={{
-                backgroundColor: 'lightgrey',
-                height: 40,
-                paddingLeft: 5,
-                paddingRight: 5,
-                flex: 5
-            }}
+              placeholder={this.props.placeholder}
+              style={combinedTextInputStyles}
               />
-              <Button title="Clear" onPress={() => this.clearInputAndTerms()} />
+              
+            {  this.props.clearBtn ? // for if the user just wants the default clearBtn
+              <TouchableOpacity onPress={() => this.clearInputAndTerms()}>
+                { this.props.clearBtn }
+              </TouchableOpacity>
+            : false }
+
+            {  !this.props.clearBtn && this.props.clearBtnVisibility ? // for if the user passes a custom btn comp. 
+              <Button title="Clear" onPress={() => this.clearInputAndTerms()} /> 
+              : false 
+            }
+           
               </View>
-          <Animated.View >
+          <Animated.View>
             <ListView
               keyboardShouldPersistTaps={rnVersion >="0.4.0" ? "always" : true}
               initialListSize={15}
