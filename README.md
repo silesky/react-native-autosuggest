@@ -1,6 +1,8 @@
 # AutoSuggest Input
 ![alt tag](https://media.giphy.com/media/26xBrNDd3FQ07U27m/source.gif)
+
 ## Props:
+
 * `terms` (__Array__  e.g. ['Chicago', 'New York', 'San Francisco'])
 * `placeholder` (__String__ e.g. "Please enter a City.")
 * `ClearBtnStyles` (__Object__ e.g. {backgroundColor: "white", flex: 2})
