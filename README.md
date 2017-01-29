@@ -1,5 +1,10 @@
-# AutoSuggest Input
+# AutoSuggest Text Input
+* `npm install autosuggest --save`
+* `import AutoSuggest from 'react-native-autosuggest'`
+___
+
 ![alt tag](https://media.giphy.com/media/26xBrNDd3FQ07U27m/source.gif)
+
 
 ## Props:
 * `clearBtn` (__Array__ e.g. [<Icon name="ios-close" />]  -- only if you want a custom btn component, default is undefined
