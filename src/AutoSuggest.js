@@ -18,7 +18,11 @@ const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
 
 export default class AutoSuggest extends Component {
   static propTypes = {
-    textInputStyles : PropTypes.object,
+    rowTextStyles: PropTypes.object,
+    rowWrapperStyles: PropTypes.object,
+    listStyles: PropTypes.object,
+    containerStyles: PropTypes.object,
+    textInputStyles: PropTypes.object,
     placeholder: PropTypes.string,
     terms: PropTypes.array,
     clearBtnVisibility: PropTypes.bool,
@@ -28,16 +32,36 @@ export default class AutoSuggest extends Component {
     placeholder: '',
     clearBtnVisibility: true
   }
-  
-   getInitialStyles() {
-      return {
-        textInputStyles : {
-            backgroundColor: 'lightgrey',
-            height: 40,
-            paddingLeft: 5,
-            paddingRight: 5,
-            flex: 5
-        }}
+  getInitialStyles() {
+    return {
+      rowWrapperStyles: {
+        paddingTop: 10,
+        paddingBottom: 10,
+        paddingLeft: 5,
+        paddingRight: 5,
+        borderBottomColor: 'lightgrey',
+        borderBottomWidth: 1
+      },
+      rowTextStyles: {
+
+      },
+      clearBtnStyles: {
+     
+
+      },
+      containerStyles: {
+          width: 300,
+          backgroundColor: 'white'
+
+      },
+      textInputStyles: {
+        backgroundColor: 'lightgrey',
+        height: 40,
+        paddingLeft: 5,
+        paddingRight: 5,
+        flex: 5
+      }
+    }
   }
   constructor(props) {
     super(props);
@@ -95,14 +119,13 @@ export default class AutoSuggest extends Component {
     this.setCurrentInput(currentInput);
     this.clearTerms();
   }
-
+  getCombinedStyles(styleName) {
+    // combine the props and the initial i.e default styles into one object.
+    return {...this.props[styleName], ...this.getInitialStyles()[styleName] }
+  }
   render() {
-    const combinedTextInputStyles = {...this.props.textInputStyles , ...this.getInitialStyles().textInputStyles }
     return (
-      <View style={{
-          width: 300,
-          backgroundColor: 'white'
-        }}>
+      <View style={this.getCombinedStyles('containerStyles')}>
       <View style={{flexDirection: 'row', justifyContent: 'center'}}>
           <TextInput
               ref="TI"
@@ -110,7 +133,7 @@ export default class AutoSuggest extends Component {
               defaultValue={this.state.currentInput}
               onChangeText={(el) => this.searchTerms(el)}
               placeholder={this.props.placeholder}
-              style={combinedTextInputStyles}
+              style={this.getCombinedStyles('textInputStyles')}
               />
               
             {  this.props.clearBtn ? // for if the user just wants the default clearBtn
@@ -120,7 +143,7 @@ export default class AutoSuggest extends Component {
             : false }
 
             {  !this.props.clearBtn && this.props.clearBtnVisibility ? // for if the user passes a custom btn comp. 
-              <Button title="Clear" onPress={() => this.clearInputAndTerms()} /> 
+              <Button style={this.getCombinedStyles('clearBtnStyles')} title="Clear" onPress={() => this.clearInputAndTerms()} /> 
               : false 
             }
            
@@ -132,13 +155,15 @@ export default class AutoSuggest extends Component {
               enableEmptySections
               dataSource={ds.cloneWithRows(this.state.results)}
               renderRow={(rowData, sectionId, rowId, highlightRow) =>  
-                      <RowWrapper                      isRemoving={this.state.isRemoving}
+                      <RowWrapper 
+                      styles={this.getCombinedStyles('rowWrapperStyles')}
+                      isRemoving={this.state.isRemoving}
                       >
                         <TouchableOpacity
                           activeOpacity={0.5 /* when you touch it the text color grimaces */}
                           onPress={() => this.onItemClick(this.state.results[rowId])}
                           >
-                            <Text style={{fontSize: 18, lineHeight: 30}}>{rowData}</Text>
+                            <Text style={this.getCombinedStyles('rowTextStyles')}>{rowData}</Text>
                           </TouchableOpacity>
                       </RowWrapper>
           }
@@ -186,28 +211,13 @@ class RowWrapper extends Component {
   }
 
   render() {
+    const combinedRowWrapperStyles = {opacity: this.state.opacity, ...this.props.styles}
     return (
       <TouchableWithoutFeedback>
-        <Animated.View style={[{
-        paddingLeft: 5,
-        paddingRight: 5,
-        opacity: this.state.opacity
-        }, RowWrapperStyles.eachRow]}
-      >
-    
-  
-        {this.props.children}
-
-     
-             </Animated.View>
-               </TouchableWithoutFeedback>
+        <Animated.View style={combinedRowWrapperStyles}>
+          {this.props.children}
+        </Animated.View>
+      </TouchableWithoutFeedback>
     )
   }
 }
-
-const RowWrapperStyles = StyleSheet.create({
-  eachRow: {
-    paddingBottom: 5,
-    paddingTop: 5,
-  }
-})
