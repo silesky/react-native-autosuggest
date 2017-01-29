@@ -18,6 +18,9 @@ const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
 
 export default class AutoSuggest extends Component {
   static propTypes = {
+    onChangeTextDebounce: PropTypes.number,
+    onItemPress: PropTypes.func,
+    onChangeText: PropTypes.func,
     rowTextStyles: PropTypes.object,
     rowWrapperStyles: PropTypes.object,
     listStyles: PropTypes.object,
@@ -29,8 +32,8 @@ export default class AutoSuggest extends Component {
   }
 
   static defaultProps = {
-    placeholder: '',
-    clearBtnVisibility: true
+    onChangeTextDebounce: 0,
+    clearBtnVisibility: false
   }
   getInitialStyles() {
     return {
@@ -69,7 +72,7 @@ export default class AutoSuggest extends Component {
     this.searchTerms = this.searchTerms.bind(this);
     this.setCurrentInput = this.setCurrentInput.bind(this);
     this.onRemoving = this.onRemoving.bind(this);
-    this.onItemClick = this.onItemClick.bind(this);
+    this.onItemPress = this.onItemPress.bind(this);
     this.listHeight = 40;
     this.state = {
       results: this.props.terms,
@@ -105,7 +108,6 @@ export default class AutoSuggest extends Component {
       const inputIsEmpty = !!(currentInput.length <= 0)
       this.setState({ results: inputIsEmpty ? [] : results }) // if input is empty don't show any results
     })()
-
   }
   onRemoving() {
     Animated.timing(this.state.listHeight, {
@@ -115,13 +117,13 @@ export default class AutoSuggest extends Component {
   }
 
   // copy the value back to the input
-  onItemClick(currentInput) {
+  onItemPress(currentInput) {
     this.setCurrentInput(currentInput);
     this.clearTerms();
   }
   getCombinedStyles(styleName) {
-    // combine the props and the initial i.e default styles into one object.
-    return {...this.props[styleName], ...this.getInitialStyles()[styleName] }
+    // combine the  initial i.e default styles into one object.
+    return {...this.getInitialStyles()[styleName], ...this.props[styleName] }
   }
   render() {
     return (
@@ -131,7 +133,10 @@ export default class AutoSuggest extends Component {
               ref="TI"
               spellCheck={false}
               defaultValue={this.state.currentInput}
-              onChangeText={(el) => this.searchTerms(el)}
+              onChangeText={(el) => { 
+                this.searchTerms(el); 
+                if (typeof this.props.onChangeText === 'function') debounce(this.props.onChangeTextDebounce, () => this.props.onChangeText(el));
+              }}
               placeholder={this.props.placeholder}
               style={this.getCombinedStyles('textInputStyles')}
               />
@@ -161,7 +166,11 @@ export default class AutoSuggest extends Component {
                       >
                         <TouchableOpacity
                           activeOpacity={0.5 /* when you touch it the text color grimaces */}
-                          onPress={() => this.onItemClick(this.state.results[rowId])}
+                          onPress={() => {
+                            this.onItemPress(this.state.results[rowId])
+                            if (this.props.onItemPress) this.props.onItemPress(this.state.results[rowId]);
+                          }
+                        }
                           >
                             <Text style={this.getCombinedStyles('rowTextStyles')}>{rowData}</Text>
                           </TouchableOpacity>
