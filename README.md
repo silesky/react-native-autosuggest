@@ -5,7 +5,9 @@
 
 ## Installation
 * `npm install autosuggest --save`
+
 ___
+
 ## Example:
 ```js
 import AutoSuggest from 'react-native-autosuggest';
