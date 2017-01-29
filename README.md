@@ -2,16 +2,17 @@
 
 
 ![alt tag](https://media.giphy.com/media/26xBrNDd3FQ07U27m/source.gif)
+
 ## Installation
 * `npm install autosuggest --save`
 ___
 ## Example:
 ```js
 import AutoSuggest from 'react-native-autosuggest';
-  
-<AutoSuggest 
+
+<AutoSuggest
       rowTextStyles={{backgroundColor: 'darkblue', color: 'white'}}
-      terms={["Apple", "Banana", "Orange", "Strawberry", "Lemon", "Cantaloupe", "Peach", "Mandarin", "Date", "Kiwi"]}  
+      terms={["Apple", "Banana", "Orange", "Strawberry", "Lemon", "Cantaloupe", "Peach", "Mandarin", "Date", "Kiwi"]}
       placeholder="select a fruit."
       textInputStyles={{backgroundColor: 'black', color: 'white'}}
       onChangeText={(el) => console.log('changing text!', el)}
@@ -23,7 +24,7 @@ import AutoSuggest from 'react-native-autosuggest';
 
 ## Props:
 Refer to React's [TextInput](https://facebook.github.io/react-native/docs/textinput.html) documentation for more information on `placeholder` and `onChangeText`.
-Refer to the source code for more information about the rest. 
+Refer to the source code for more information about the rest.
 
 * `onChangeText` (__function__, fired when the input changes.)
 * `onChangeTextDebounce` (__integer__, the minimum break *in milliseconds* that the onChangeText callback needs to take before firing again. **default is 0.**)
