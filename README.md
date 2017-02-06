@@ -9,9 +9,8 @@
 ___
 
 ## Example:
+~~import { TextInput } from 'react-native'~~
 ```js
-
-~import { TextInput } from 'react-native'~
 import AutoSuggest from 'react-native-autosuggest';
 
 <AutoSuggest
