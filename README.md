@@ -36,7 +36,7 @@ Refer to the source code for more information about the rest.
 * `placeholder` (__String__ e.g. "Please enter a City.")
 ### Styles
 * `clearBtnStyles` (__Object__ e.g. {backgroundColor: "white", flex: 2})
-* `textInputStyles` (__Object__ e.g. {width: 400, backgroundColor: "black"})
+* `Styles` (__Object__ applies to the TextInput component e.g {width: 400, backgroundColor: "black"})
 * `containerStyles` (__Object__ e.g. {flex: 2})
 * `rowWrapperStyles`
 
