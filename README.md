@@ -10,7 +10,8 @@ ___
 
 ## Example:
 ```js
-~~import { TextInput } from 'react-native'~~
+
+~import { TextInput } from 'react-native'~
 import AutoSuggest from 'react-native-autosuggest';
 
 <AutoSuggest
