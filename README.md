@@ -10,9 +10,8 @@ ___
 
 ## Example:
 ~~import { TextInput } from 'react-native'~~
+`import AutoSuggest from 'react-native-autosuggest';`
 ```js
-import AutoSuggest from 'react-native-autosuggest';
-
 <AutoSuggest
       rowTextStyles={{backgroundColor: 'darkblue', color: 'white'}}
       terms={["Apple", "Banana", "Orange", "Strawberry", "Lemon", "Cantaloupe", "Peach", "Mandarin", "Date", "Kiwi"]}
