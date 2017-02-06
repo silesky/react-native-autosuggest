@@ -1,7 +1,7 @@
 # AutoSuggest Text Input
 
 
-![alt tag](https://media.giphy.com/media/26xBrNDd3FQ07U27m/source.gif)
+![alt tag](https://github.com/silesky/react-native-autosuggest/blob/259c32a3cec308e30994d708f4abeb33572ed6b9/demo.gif)
 
 ## Installation
 * `npm install autosuggest --save`
