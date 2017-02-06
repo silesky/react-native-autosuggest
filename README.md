@@ -1,4 +1,4 @@
-# AutoSuggest Text Input
+# AutoSuggest TextInput Component
 
 
 ![alt tag](https://github.com/silesky/react-native-autosuggest/blob/259c32a3cec308e30994d708f4abeb33572ed6b9/demo.gif)
@@ -10,6 +10,7 @@ ___
 
 ## Example:
 ```js
+~~import { TextInput } from 'react-native'~~
 import AutoSuggest from 'react-native-autosuggest';
 
 <AutoSuggest
