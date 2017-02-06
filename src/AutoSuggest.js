@@ -24,7 +24,7 @@ export default class AutoSuggest extends Component {
     rowWrapperStyles: PropTypes.object,
     listStyles: PropTypes.object,
     containerStyles: PropTypes.object,
-    textInputStyles: PropTypes.object,
+    styles: PropTypes.object, // textInput
     placeholder: PropTypes.string,
     terms: PropTypes.array,
     clearBtnVisibility: PropTypes.bool
@@ -55,7 +55,7 @@ export default class AutoSuggest extends Component {
         backgroundColor: 'white'
 
       },
-      textInputStyles: {
+      styles: {
         backgroundColor: 'lightgrey',
         height: 40,
         paddingLeft: 5,
@@ -120,7 +120,7 @@ export default class AutoSuggest extends Component {
   }
   getCombinedStyles (styleName) {
     // combine the  initial i.e default styles into one object.
-    return { ...this.getInitialStyles()[styleName], ...this.props[styleName] }
+    return {...this.getInitialStyles()[styleName], ...this.props[styleName] }
   }
   render () {
     return (
@@ -135,7 +135,7 @@ export default class AutoSuggest extends Component {
                 if (typeof this.props.onChangeText === 'function') debounce(this.props.onChangeTextDebounce, () => this.props.onChangeText(el))
               }}
               placeholder={this.props.placeholder}
-              style={this.getCombinedStyles('textInputStyles')}
+              style={this.getCombinedStyles('styles')}
               />
 
             { this.props.clearBtn // for if the user just wants the default clearBtn
@@ -200,13 +200,13 @@ class RowWrapper extends Component {
     if (this.props.isRemoving) {
       Animated.sequence([
         Animated.timing(this.state.opacity, {
-          toValue: 0.75,
-          duration: 100
-        }),
+        toValue: 0.75,
+        duration: 100
+      }),
         Animated.timing(this.state.opacity, {
-          toValue: 1,
-          duration: 200
-        })
+        toValue: 1,
+        duration: 200
+      })
       ]).start()
     }
   }
