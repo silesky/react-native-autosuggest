@@ -12,7 +12,7 @@ import {
   Button
 } from 'react-native'
 import { debounce } from 'throttle-debounce'
-const rnVersion = require('react-native/package.json').version
+import { version } from  'react-native/package.json';
 const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
 
 export default class AutoSuggest extends Component {
@@ -31,12 +31,13 @@ export default class AutoSuggest extends Component {
   }
 
   static defaultProps = {
-    onChangeTextDebounce: 0,
+    onChangeTextDeounce: 0,
     clearBtnVisibility: false
   }
   getInitialStyles () {
     return {
       rowWrapperStyles: {
+        zIndex: 999,
         paddingTop: 10,
         paddingBottom: 10,
         paddingLeft: 5,
@@ -51,6 +52,7 @@ export default class AutoSuggest extends Component {
 
       },
       containerStyles: {
+        zIndex: 999,
         width: 300,
         backgroundColor: 'white'
 
@@ -73,7 +75,8 @@ export default class AutoSuggest extends Component {
     this.onItemPress = this.onItemPress.bind(this)
     this.listHeight = 40
     this.state = {
-      results: this.props.terms,
+      TIWidth: null, 
+      results: [],
       currentInput: null,
       isRemoving: null,
       listHeight: new Animated.Value(this.listHeight)
@@ -84,6 +87,12 @@ export default class AutoSuggest extends Component {
     Keyboard.addListener('keyboardDidHide', () => this.clearTerms())
   }
 
+  getAndSetWidth () {
+     this.refs.TI.measure((ox, oy, width, ...rest ) => {
+        this.setState({TIWidth: width});
+     })
+    
+  }
   setCurrentInput (currentInput) {
     this.setState({ currentInput })
   }
@@ -96,7 +105,9 @@ export default class AutoSuggest extends Component {
   addAllTerms () { this.setState({ results: this.props.terms }) }
   searchTerms (currentInput) {
     this.setState({ currentInput })
+    
     debounce(300, () => {
+      this.getAndSetWidth();
       const findMatch = (term1, term2) => term1.toLowerCase().indexOf(term2.toLowerCase()) > -1
       const results = this.props.terms.filter(eachTerm => {
         if (findMatch(eachTerm, currentInput)) return eachTerm
@@ -123,9 +134,12 @@ export default class AutoSuggest extends Component {
     return {...this.getInitialStyles()[styleName], ...this.props[styleName] }
   }
   render () {
+
     return (
       <View style={this.getCombinedStyles('containerStyles')}>
-      <View style={{flexDirection: 'row', justifyContent: 'center'}}>
+      <View 
+      ref="TIContainer"
+      style={{flexDirection: 'row', justifyContent: 'center'}}>
           <TextInput
               ref="TI"
               spellCheck={false}
@@ -148,18 +162,17 @@ export default class AutoSuggest extends Component {
               ? <Button style={this.getCombinedStyles('clearBtnStyles')} title="Clear" onPress={() => this.clearInputAndTerms()} />
               : false
             }
-
-              </View>
-          <Animated.View>
-            <ListView
-              keyboardShouldPersistTaps={rnVersion >= '0.4.0' ? 'always' : true}
+         </View>
+         <View>
+            <ListView style={{ position: 'absolute', width: this.state.TIWidth,backgroundColor: 'white', zIndex: 3}}
+              keyboardShouldPersistTaps={version >= '0.4.0' ? 'always' : true}
               initialListSize={15}
               enableEmptySections
               dataSource={ds.cloneWithRows(this.state.results)}
               renderRow={(rowData, sectionId, rowId, highlightRow) =>
                       <RowWrapper
-                      styles={this.getCombinedStyles('rowWrapperStyles')}
-                      isRemoving={this.state.isRemoving}
+                        styles={this.getCombinedStyles('rowWrapperStyles')}
+                        isRemoving={this.state.isRemoving}
                       >
                         <TouchableOpacity
                           activeOpacity={0.5 /* when you touch it the text color grimaces */}
@@ -174,11 +187,13 @@ export default class AutoSuggest extends Component {
                       </RowWrapper>
           }
               />
-        </Animated.View>
+              </View>
+
     </View>
 
     )
   }
+
 }
 
 class RowWrapper extends Component {
@@ -212,10 +227,9 @@ class RowWrapper extends Component {
   }
 
   render () {
-    const combinedRowWrapperStyles = {opacity: this.state.opacity, ...this.props.styles}
     return (
       <TouchableWithoutFeedback>
-        <Animated.View style={combinedRowWrapperStyles}>
+        <Animated.View style={{...this.props.styles, opacity: this.state.opacity, }}>
           {this.props.children}
         </Animated.View>
       </TouchableWithoutFeedback>
