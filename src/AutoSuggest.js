@@ -12,7 +12,7 @@ import {
   Button
 } from 'react-native'
 import { debounce } from 'throttle-debounce'
-import { version } from 'react-native/package.json';
+import { version } from 'react-native/package.json'
 const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
 
 export default class AutoSuggest extends Component {
@@ -32,15 +32,15 @@ export default class AutoSuggest extends Component {
   }
 
   static defaultProps = {
-    onChangeTextDebounce: 0,
-    clearBtnVisibility: false
+    terms: [],
+    clearBtnVisibility: false,
+    placeholder: '',
+    textInputStyles: {},
+    otherTextInputProps: {},
+    onChangeTextDebounce: 0
   }
-  getInitialStyles() {
-    const { 
-      textInputStyles: 
-      { backgroundColor }
-    } = this.props;
-    const defaultBgColor = 'white';
+  getInitialStyles () {
+    const { textInputStyles } = this.props
     return {
       rowWrapperStyles: {
         zIndex: 999,
@@ -51,7 +51,7 @@ export default class AutoSuggest extends Component {
         opacity: 0.8,
         borderTopColor: 'lightgrey',
         borderBottomColor: 'lightgrey',
-        borderBottomWidth: 1,
+        borderBottomWidth: 1
       },
       rowTextStyles: {
 
@@ -62,7 +62,7 @@ export default class AutoSuggest extends Component {
       containerStyles: {
         zIndex: 999,
         width: 300,
-        backgroundColor: backgroundColor ? backgroundColor: defaultBgColor
+        backgroundColor: textInputStyles.backgroundColor || 'white'
       },
       textInputStyles: { // textInput Styles
         paddingLeft: 5,
@@ -73,7 +73,7 @@ export default class AutoSuggest extends Component {
       }
     }
   }
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.clearTerms = this.clearTerms.bind(this)
     this.searchTerms = this.searchTerms.bind(this)
@@ -89,32 +89,31 @@ export default class AutoSuggest extends Component {
       listHeight: new Animated.Value(this.listHeight)
     }
   }
-  componentDidMount() {
+  componentDidMount () {
     // when user hits the return button, clear the terms
     Keyboard.addListener('keyboardDidHide', () => this.clearTerms())
   }
 
-  getAndSetWidth() {
+  getAndSetWidth () {
     this.refs.TI.measure((ox, oy, width, ...rest) => {
-      this.setState({ TIWidth: width });
+      this.setState({ TIWidth: width })
     })
-
   }
-  setCurrentInput(currentInput) {
+  setCurrentInput (currentInput) {
     this.setState({ currentInput })
   }
 
-  clearInputAndTerms() {
+  clearInputAndTerms () {
     this.refs.TI.clear()
     this.clearTerms()
   }
-  clearTerms() { this.setState({ results: [] }) }
-  addAllTerms() { this.setState({ results: this.props.terms }) }
-  searchTerms(currentInput) {
+  clearTerms () { this.setState({ results: [] }) }
+  addAllTerms () { this.setState({ results: this.props.terms }) }
+  searchTerms (currentInput) {
     this.setState({ currentInput })
 
     debounce(300, () => {
-      this.getAndSetWidth();
+      this.getAndSetWidth()
       const findMatch = (term1, term2) => term1.toLowerCase().indexOf(term2.toLowerCase()) > -1
       const results = this.props.terms.filter(eachTerm => {
         if (findMatch(eachTerm, currentInput)) return eachTerm
@@ -124,7 +123,7 @@ export default class AutoSuggest extends Component {
       this.setState({ results: inputIsEmpty ? [] : results }) // if input is empty don't show any results
     })()
   }
-  onRemoving() {
+  onRemoving () {
     Animated.timing(this.state.listHeight, {
       toValue: this.lisHeight * this.state.results.length - 1,
       duration: 1000
@@ -132,21 +131,21 @@ export default class AutoSuggest extends Component {
   }
 
   // copy the value back to the input
-  onItemPress(currentInput) {
+  onItemPress (currentInput) {
     this.setCurrentInput(currentInput)
     this.clearTerms()
   }
-  getCombinedStyles(styleName) {
-    let styleObj;
+  getCombinedStyles (styleName) {
+    let styleObj
     if (typeof this.props.styleName !== 'object') { // this is if its a stylesheet reference
       styleObj = StyleSheet.flatten([this.getInitialStyles()[styleName], this.props[styleName]])
     } else {
       // combine the  initial i.e default styles into one object.
       styleObj = {...this.getInitialStyles()[styleName], ...this.props[styleName] }
     }
-    return styleObj;
+    return styleObj
   }
-  render() {
+  render () {
     const {
       onChangeText,
       otherTextInputProps,
@@ -156,11 +155,11 @@ export default class AutoSuggest extends Component {
       clearBtnVisibility,
       onChangeTextDebounce,
       onItemPress,
-      textInputStyles,
-    } = this.props;
+      textInputStyles
+    } = this.props
     return (
       <View style={this.getCombinedStyles('containerStyles')}>
-      <View 
+      <View
       ref="TIContainer"
       style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
           <TextInput
@@ -189,7 +188,7 @@ export default class AutoSuggest extends Component {
             }
          </View>
          <View>
-            <ListView style={{ position: 'absolute', width: this.state.TIWidth,backgroundColor: 'white', zIndex: 3}}
+            <ListView style={{ position: 'absolute', width: this.state.TIWidth, backgroundColor: 'white', zIndex: 3}}
               keyboardShouldPersistTaps={version >= '0.4.0' ? 'always' : true}
               initialListSize={15}
               enableEmptySections
@@ -222,7 +221,7 @@ export default class AutoSuggest extends Component {
 }
 
 class RowWrapper extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
 
     this.defaultTransitionDuration = 500
@@ -230,13 +229,13 @@ class RowWrapper extends Component {
       opacity: new Animated.Value(0)
     }
   }
-  componentDidMount() {
+  componentDidMount () {
     Animated.timing(this.state.opacity, {
       toValue: 1,
       duration: this.defaultTransitionDuration
     }).start()
   }
-  componentWillReceiveProps() {
+  componentWillReceiveProps () {
     if (this.props.isRemoving) {
       Animated.sequence([
         Animated.timing(this.state.opacity, {
@@ -251,10 +250,10 @@ class RowWrapper extends Component {
     }
   }
 
-  render() {
+  render () {
     return (
       <TouchableWithoutFeedback>
-        <Animated.View style={{...this.props.styles, opacity: this.state.opacity, }}>
+        <Animated.View style={{...this.props.styles, opacity: this.state.opacity }}>
           {this.props.children}
         </Animated.View>
       </TouchableWithoutFeedback>
