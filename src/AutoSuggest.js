@@ -18,16 +18,15 @@ const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
 export default class AutoSuggest extends Component {
   static propTypes = {
     otherTextInputProps: PropTypes.object,
+    placeholder: PropTypes.string, // textInput
     placeholderTextColor: PropTypes.string,
     onChangeTextDebounce: PropTypes.number,
     onItemPress: PropTypes.func,
     onChangeText: PropTypes.func,
     rowTextStyles: PropTypes.object,
     rowWrapperStyles: PropTypes.object,
-    listStyles: PropTypes.object,
     containerStyles: PropTypes.object,
-    textInputStyles: PropTypes.number, // I guess a reference to the stylesheet. should be an object but its not.
-    placeholder: PropTypes.string, // textInput
+    textInputStyles: PropTypes.object, // I guess a reference to the stylesheet. should be an object but its not.
     terms: PropTypes.array,
     clearBtnVisibility: PropTypes.bool
   }
@@ -37,8 +36,10 @@ export default class AutoSuggest extends Component {
     clearBtnVisibility: false
   }
   getInitialStyles() {
-    let { textInputStyles } = this.props;
-    const { backgroundColor } = StyleSheet.flatten(textInputStyles);
+    const { 
+      textInputStyles: 
+      { backgroundColor }
+    } = this.props;
     const defaultBgColor = 'white';
     return {
       rowWrapperStyles: {
@@ -61,8 +62,7 @@ export default class AutoSuggest extends Component {
       containerStyles: {
         zIndex: 999,
         width: 300,
-        backgroundColor: textInputStyles ? backgroundColor : defaultBgColor,
-
+        backgroundColor: backgroundColor ? backgroundColor: defaultBgColor
       },
       textInputStyles: { // textInput Styles
         paddingLeft: 5,

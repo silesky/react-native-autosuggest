@@ -12,16 +12,13 @@ ___
 ~~import { TextInput } from 'react-native'~~
 `import AutoSuggest from 'react-native-autosuggest';`
 ```js
-<AutoSuggest
-      rowTextStyles={{backgroundColor: 'darkblue', color: 'white'}}
-      terms={["Apple", "Banana", "Orange", "Strawberry", "Lemon", "Cantaloupe", "Peach", "Mandarin", "Date", "Kiwi"]}
-      placeholder="select a fruit."
-      textInputStyles={{backgroundColor: 'black', color: 'white'}}
-      onChangeText={(el) => console.log('changing text!', el)}
-      onChangeTextDebounce={200}
-      clearBtnVisibility={true}
+   <AutoSuggest
+      onChangeText={(el) => console.log('input changing!')}
+      terms={['Apple', 'Banana', 'Orange', 'Strawberry', 'Lemon', 'Cantaloupe', 'Peach', 'Mandarin', 'Date', 'Kiwi']}
       ...
     />
+
+  
 ```
 
 ## Props:
@@ -32,13 +29,13 @@ Refer to the source code for more information about the rest.
 * `onChangeTextDebounce` (__integer__, the minimum break *in milliseconds* that the onChangeText callback needs to take before firing again. **default is 0.**)
 * `onItemPress` (__function__ fired when an item in the menu is pressed with that item's string value as the argument. You probably don't need this, and should just use onChangeText)
 * `clearBtn` (__Array__ e.g. [[<MyCustomClearButtonComponent />]  -- only if you want a custom btn component, **default is undefined**.)
+* `clearBtnStyles` (__Object__)
 * `terms` (__Array__  e.g. ['Chicago', 'New York', 'San Francisco'])
 * `placeholder` (__String__ e.g. "Please enter a City.")
-### Styles
-* `clearBtnStyles` (__Object__ e.g. {backgroundColor: "white", flex: 2})
-* `Styles` (__Object__ applies to the TextInput component e.g {width: 400, backgroundColor: "black"})
-* `containerStyles` (__Object__ e.g. {flex: 2})
-* `rowWrapperStyles`
-
-## Todo:
-* ~~pass a custom component for the "clear" button~~
+* `placeholderTextColor` (__string__)
+* `otherTextInputProps` (__object__, check the [TextInput](https://facebook.github.io/react-native/docs/textinput.html) docs for the full list)
+* `containerStyles` (__object__)
+* `textInputStyles` (__Object__ applies to the TextInput component e.g {width: 400, backgroundColor: "black"})
+* `containerStyles` (__Object__)
+* `rowWrapperStyles`(__Object__)
+* `rowTextStyles` (__Object__)
