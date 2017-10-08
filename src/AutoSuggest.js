@@ -11,6 +11,7 @@ import {
   TouchableWithoutFeedback,
   Button
 } from 'react-native'
+import PropTypes from 'prop-types'
 import debounce from '../vendor/throttle-debounce/debounce'
 import { version } from 'react-native/package.json'
 const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
