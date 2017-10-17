@@ -119,7 +119,7 @@ export default class AutoSuggest extends Component {
       const results = this.props.terms.filter(eachTerm => {
         if (typeof eachTerm === 'object')  {
           if (eachTerm.term && findMatch(eachTerm.term, currentInput)) return eachTerm
-          if (eachTerm.searchableID && findMatch(eachTerm.searchableID, currentInput)) return eachTerm
+          if (eachTerm.searchableID && findMatch(eachTerm.searchableID, currentInput)) {eachTerm.foundByID=true; return eachTerm }
         }
         else if (findMatch(eachTerm, currentInput)) return eachTerm
       })
@@ -144,7 +144,7 @@ export default class AutoSuggest extends Component {
     }
     return styleObj
   }
-  termString = term => ( typeof term === 'string' ? term : (this.props.formatString?this.props.formatString(term):term.term) )
+  termString = term => (typeof term === 'string' ? term : (this.props.formatString && term.foundByID?this.props.formatString(term):term.term) )
   render () {
     const {
       otherTextInputProps,
