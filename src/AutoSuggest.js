@@ -15,11 +15,15 @@ import debounce from '../vendor/throttle-debounce/debounce'
 import { version } from 'react-native/package.json'
 const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
 
+// 'term' objects take the shape
+//   { term: string, searchableID?: string (TODO, allow int), value?: any, formatString?: function }
+
 export default class AutoSuggest extends Component {
   static propTypes = {
     containerStyles: PropTypes.object,
     clearBtnStyles: PropTypes.object,
     clearBtnVisibility: PropTypes.bool,
+    formatString: PropTypes.func,
     otherTextInputProps: PropTypes.object,
     placeholder: PropTypes.string, // textInput
     placeholderTextColor: PropTypes.string,
@@ -113,7 +117,11 @@ export default class AutoSuggest extends Component {
       this.getAndSetWidth()
       const findMatch = (term1, term2) => term1.toLowerCase().indexOf(term2.toLowerCase()) > -1
       const results = this.props.terms.filter(eachTerm => {
-        if (findMatch(eachTerm, currentInput)) return eachTerm
+        if (typeof eachTerm === 'object')  {
+          if (eachTerm.term && findMatch(eachTerm.term, currentInput)) return eachTerm
+          if (eachTerm.searchableID && findMatch(eachTerm.searchableID, currentInput)) return eachTerm
+        }
+        else if (findMatch(eachTerm, currentInput)) return eachTerm
       })
 
       const inputIsEmpty = !!(currentInput.length <= 0)
@@ -123,7 +131,7 @@ export default class AutoSuggest extends Component {
 
   // copy the value back to the input
   onItemPress (currentInput) {
-    this.setCurrentInput(currentInput)
+    this.setCurrentInput(currentInput.term||currentInput)
     this.clearTerms()
   }
   getCombinedStyles (styleName) {
@@ -136,6 +144,7 @@ export default class AutoSuggest extends Component {
     }
     return styleObj
   }
+  termString = term => ( typeof term === 'string' ? term : (this.props.formatString?this.props.formatString(term):term.term) )
   render () {
     const {
       otherTextInputProps,
@@ -194,7 +203,7 @@ export default class AutoSuggest extends Component {
                           }
                         }
                           >
-                            <Text style={this.getCombinedStyles('rowTextStyles')}>{rowData}</Text>
+                            <Text style={this.getCombinedStyles('rowTextStyles')}>{this.termString(rowData)}</Text>
                           </TouchableOpacity>
                       </RowWrapper>
           }
