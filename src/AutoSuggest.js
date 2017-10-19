@@ -15,9 +15,6 @@ import debounce from '../vendor/throttle-debounce/debounce'
 import { version } from 'react-native/package.json'
 const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
 
-// 'term' objects take the shape
-//   { term: string, searchableID?: string (TODO, allow int), value?: any, formatString?: function }
-
 export default class AutoSuggest extends Component {
   static propTypes = {
     containerStyles: PropTypes.object,
