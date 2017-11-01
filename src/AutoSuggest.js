@@ -30,8 +30,8 @@ export default class AutoSuggest extends Component {
     rowTextStyles: PropTypes.object,
     rowWrapperStyles: PropTypes.object,
     textInputStyles: PropTypes.object,
-    terms: PropTypes.array
-
+    terms: PropTypes.array,
+    dropdownHeight: PropTypes.number
   }
 
   static defaultProps = {
@@ -150,7 +150,8 @@ export default class AutoSuggest extends Component {
       clearBtn,
       clearBtnVisibility,
       onChangeTextDebounce,
-      onItemPress
+      onItemPress,
+      dropdownHeight
     } = this.props
     return (
       <View style={this.getCombinedStyles('containerStyles')}>
@@ -184,6 +185,7 @@ export default class AutoSuggest extends Component {
          </View>
          <View>
             <ListView style={{
+                ...( this.state.results.length>0 && dropdownHeight ? {height: dropdownHeight} : {} ),
                 position: 'absolute', width: this.state.TIWidth, backgroundColor: 'white', zIndex: 3,
                 borderBottomLeftRadius: 4, borderBottomRightRadius: 4, borderColor:"#cccccc", borderWidth: this.state.results.length>0 ? 1 : 0
               }}
