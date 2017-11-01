@@ -60,3 +60,4 @@ As props, we use `onItemPress` to detect selection of an item so we can write th
 | `rowWrapperStyles` | Object | true | undefined | applies to the View around the dropdown |
 | `rowTextStyles` | Object | true | undefined | applies the dropdown text
 | `formatString` | Function | true | undefined | a function that outputs a string which takes a term object to format an item found using its `searchableID`
+| `dropdownHeight` | Number   |  true |  undefined |  limit the height of the search results dropdown   |
