@@ -76,7 +76,9 @@
   "bugs": {
     "url": "https://github.com/silesky/react-native-autosuggest/issues"
   },
-  "dependencies": {},
+  "dependencies": {
+    "prop-types": "^15.6.0"
+  },
   "description": "an autosuggest text input implementation for react native.",
   "devDependencies": {},
   "gitHead": "0c364d5e0561d3c83f1f4dbe967e7288d23923e3",
