@@ -1,5 +1,5 @@
 {
-  "plugins": ["react", "standard"],
+  "plugins": ["react", "standard", "prefer-object-spread"],
   "globals": {
     "expect": true
   },
@@ -19,17 +19,15 @@
     "jquery": true,
     "node": true,
     "es6": true,
-    "browser": true
+    "browser": true,
+    "jest": true
   },
   "rules": {
-    "no-debugger": 1,
-    "no-console": 1,
+    "prefer-object-spread/prefer-object-spread": 2,
     "no-case-declarations": 0,
-    "no-var": 1,
-    "array-bracket-spacing": [1, "always"], // space inside brackets
-    "object-curly-spacing": [1, "always"], // I like space inside braces
-    "comma-dangle": [1, "always-multiline"], // I like commas at the end
-    "react/jsx-no-duplicate-props": 1,
+    "array-bracket-spacing": [2, "always"], // space inside brackets
+    "object-curly-spacing": [2, "always"], // space inside braces
+    "comma-dangle": [2, "always-multiline"],
     "react/prop-types": 0,
     "react/no-find-dom-node": 1,
     "react/react-in-jsx-scope": 2
