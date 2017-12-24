@@ -41,6 +41,18 @@ export default class AutoSuggest extends Component {
     otherTextInputProps: {},
     onChangeTextDebounce: 200,
   }
+
+  state = {
+    textInputWidth: null,
+    results: [],
+    currentInput: null,
+  }
+
+  componentDidMount () {
+    // when user hits the return button, clear the terms
+    Keyboard.addListener('keyboardDidHide', () => this.clearTerms())
+  }
+
   getInitialStyles () {
     const { textInputStyles } = this.props
     return {
@@ -72,43 +84,31 @@ export default class AutoSuggest extends Component {
       },
     }
   }
-  constructor (props) {
-    super(props)
-    this.clearTerms = this.clearTerms.bind(this)
-    this.searchTerms = this.searchTerms.bind(this)
-    this.setCurrentInput = this.setCurrentInput.bind(this)
-    this.onItemPress = this.onItemPress.bind(this)
-    this.state = {
-      textInputWidth: null,
-      results: [],
-      currentInput: null,
-    }
-  }
-  componentDidMount () {
-    // when user hits the return button, clear the terms
-    Keyboard.addListener('keyboardDidHide', () => this.clearTerms())
-  }
 
   getAndSetWidth () {
     this.textInput.measure((ox, oy, width, ...rest) => {
       this.setState({ textInputWidth: width })
     })
   }
-  setCurrentInput (currentInput) {
-    this.setState({ currentInput })
-  }
 
   clearInputAndTerms () {
     this.textInput.clear()
     this.clearTerms()
   }
-  clearTerms () {
+
+  clearTerms = () => {
     this.setState({ results: [] })
   }
+
   addAllTerms () {
     this.setState({ results: this.props.terms })
   }
-  searchTerms (currentInput) {
+
+  setCurrentInput = currentInput => {
+    this.setState({ currentInput })
+  }
+
+  searchTerms = currentInput => {
     this.setState({ currentInput })
     debounce(300, () => {
       this.getAndSetWidth()
@@ -124,10 +124,11 @@ export default class AutoSuggest extends Component {
   }
 
   // copy the value back to the input
-  onItemPress (currentInput) {
+  onItemPress = currentInput => {
     this.setCurrentInput(currentInput)
     this.clearTerms()
   }
+
   getCombinedStyles (styleName) {
     let styleObj
     if (typeof this.props.styleName !== 'object') {
@@ -145,6 +146,7 @@ export default class AutoSuggest extends Component {
     }
     return styleObj
   }
+
   render () {
     const {
       otherTextInputProps,
@@ -235,29 +237,28 @@ export default class AutoSuggest extends Component {
 }
 
 class RowWrapper extends Component {
-  constructor (props) {
-    super(props)
+    static defaultTransitionDuration = 500
 
-    this.defaultTransitionDuration = 500
-    this.state = {
+    state = {
       opacity: new Animated.Value(0),
     }
-  }
-  componentDidMount () {
-    Animated.timing(this.state.opacity, {
-      toValue: 1,
-      duration: this.defaultTransitionDuration,
-    }).start()
-  }
-  render () {
-    return (
-      <TouchableWithoutFeedback>
-        <Animated.View
-          style={{ ...this.props.styles, opacity: this.state.opacity }}
-        >
-          {this.props.children}
-        </Animated.View>
-      </TouchableWithoutFeedback>
-    )
-  }
+
+    componentDidMount () {
+      Animated.timing(this.state.opacity, {
+        toValue: 1,
+        duration: this.defaultTransitionDuration,
+      }).start()
+    }
+
+    render () {
+      return (
+        <TouchableWithoutFeedback>
+          <Animated.View
+            style={{ ...this.props.styles, opacity: this.state.opacity }}
+          >
+            {this.props.children}
+          </Animated.View>
+        </TouchableWithoutFeedback>
+      )
+    }
 }
