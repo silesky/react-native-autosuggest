@@ -42,3 +42,9 @@ check the [index.ios.js](https://github.com/silesky/AutosuggestExample/blob/mast
 | `textInputStyles` | Object | true | undefined | applies to the TextInput component e.g {width: 400, backgroundColor: "black"})
 | `rowWrapperStyles` | Object | true | undefined | applies to the View around the dropdown |
 | `rowTextStyles` | Object | true | undefined | applies the dropdown text
+
+
+
+### Contributing
+- I set up the following repo for development: https://github.com/silesky/AutosuggestExample
+- Clone, npm install, and cd `node_modules/react-native-autosuggest` to start work.
