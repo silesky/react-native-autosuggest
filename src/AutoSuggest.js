@@ -79,7 +79,7 @@ export default class AutoSuggest extends Component {
     this.setCurrentInput = this.setCurrentInput.bind(this)
     this.onItemPress = this.onItemPress.bind(this)
     this.state = {
-      TIWidth: null,
+      textInputWidth: null,
       results: [],
       currentInput: null,
     }
@@ -90,8 +90,8 @@ export default class AutoSuggest extends Component {
   }
 
   getAndSetWidth () {
-    this.refs.TI.measure((ox, oy, width, ...rest) => {
-      this.setState({ TIWidth: width })
+    this.textInput.measure((ox, oy, width, ...rest) => {
+      this.setState({ textInputWidth: width })
     })
   }
   setCurrentInput (currentInput) {
@@ -99,7 +99,7 @@ export default class AutoSuggest extends Component {
   }
 
   clearInputAndTerms () {
-    this.refs.TI.clear()
+    this.textInput.clear()
     this.clearTerms()
   }
   clearTerms () {
@@ -158,7 +158,6 @@ export default class AutoSuggest extends Component {
     return (
       <View style={this.getCombinedStyles('containerStyles')}>
         <View
-          ref='TIContainer'
           style={{
             flexDirection: 'row',
             justifyContent: 'center',
@@ -168,7 +167,9 @@ export default class AutoSuggest extends Component {
           <TextInput
             {...otherTextInputProps}
             placeholderTextColor={placeholderTextColor}
-            ref='TI'
+            ref={c => {
+              this.textInput = c
+            }}
             spellCheck={false}
             defaultValue={this.state.currentInput}
             onChangeText={el => {
@@ -201,7 +202,7 @@ export default class AutoSuggest extends Component {
           <ListView
             style={{
               position: 'absolute',
-              width: this.state.TIWidth,
+              width: this.state.textInputWidth,
               backgroundColor: 'white',
               zIndex: 3,
             }}
