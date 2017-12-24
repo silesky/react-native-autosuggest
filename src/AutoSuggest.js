@@ -22,6 +22,7 @@ export default class AutoSuggest extends Component {
     containerStyles: PropTypes.object,
     clearBtnStyles: PropTypes.object,
     clearBtnVisibility: PropTypes.bool,
+    formatString: PropTypes.func,
     otherTextInputProps: PropTypes.object,
     placeholder: PropTypes.string, // textInput
     placeholderTextColor: PropTypes.string,
@@ -115,7 +116,11 @@ export default class AutoSuggest extends Component {
       this.getAndSetWidth()
       const findMatch = (term1, term2) => term1.toLowerCase().indexOf(term2.toLowerCase()) > -1
       const results = this.props.terms.filter(eachTerm => {
-        if (findMatch(eachTerm, currentInput)) return eachTerm
+        if (typeof eachTerm === 'object')  {
+          if (eachTerm.term && findMatch(eachTerm.term, currentInput)) return eachTerm
+          if (eachTerm.searchableID && findMatch(eachTerm.searchableID, currentInput)) {eachTerm.foundByID=true; return eachTerm }
+        }
+        else if (findMatch(eachTerm, currentInput)) return eachTerm
       })
 
       const inputIsEmpty = !!(currentInput.length <= 0)
@@ -125,7 +130,7 @@ export default class AutoSuggest extends Component {
 
   // copy the value back to the input
   onItemPress (currentInput) {
-    this.setCurrentInput(currentInput)
+    this.setCurrentInput(currentInput.term||currentInput)
     this.clearTerms()
   }
   getCombinedStyles (styleName) {
@@ -138,6 +143,7 @@ export default class AutoSuggest extends Component {
     }
     return styleObj
   }
+  termString = term => (typeof term === 'string' ? term : (this.props.formatString && term.foundByID?this.props.formatString(term):term.term) )
   render () {
     const {
       otherTextInputProps,
@@ -179,7 +185,10 @@ export default class AutoSuggest extends Component {
             }
          </View>
          <View>
-            <ListView style={{position: 'absolute', width: this.state.TIWidth, backgroundColor: 'white', zIndex: 3}}
+            <ListView style={{
+                position: 'absolute', width: this.state.TIWidth, backgroundColor: 'white', zIndex: 3,
+                borderBottomLeftRadius: 4, borderBottomRightRadius: 4, borderColor:"#cccccc", borderWidth: this.state.results.length>0 ? 1 : 0
+              }}
               keyboardShouldPersistTaps={version >= '0.4.0' ? 'always' : true}
               initialListSize={15}
               enableEmptySections
@@ -196,7 +205,7 @@ export default class AutoSuggest extends Component {
                           }
                         }
                           >
-                            <Text style={this.getCombinedStyles('rowTextStyles')}>{rowData}</Text>
+                            <Text style={this.getCombinedStyles('rowTextStyles')}>{this.termString(rowData)}</Text>
                           </TouchableOpacity>
                       </RowWrapper>
           }
