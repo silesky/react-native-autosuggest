@@ -11,10 +11,9 @@ import {
   View,
   Keyboard,
   TouchableWithoutFeedback,
-  Button
+  Button,
 } from 'react-native'
 import debounce from '../vendor/throttle-debounce/debounce'
-import { version } from 'react-native/package.json'
 const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
 
 export default class AutoSuggest extends Component {
@@ -31,8 +30,7 @@ export default class AutoSuggest extends Component {
     rowTextStyles: PropTypes.object,
     rowWrapperStyles: PropTypes.object,
     textInputStyles: PropTypes.object,
-    terms: PropTypes.array
-
+    terms: PropTypes.array,
   }
 
   static defaultProps = {
@@ -41,7 +39,7 @@ export default class AutoSuggest extends Component {
     placeholder: '',
     textInputStyles: {},
     otherTextInputProps: {},
-    onChangeTextDebounce: 200
+    onChangeTextDebounce: 200,
   }
   getInitialStyles () {
     const { textInputStyles } = this.props
@@ -55,26 +53,23 @@ export default class AutoSuggest extends Component {
         opacity: 0.8,
         borderTopColor: 'lightgrey',
         borderBottomColor: 'lightgrey',
-        borderBottomWidth: 1
+        borderBottomWidth: 1,
       },
-      rowTextStyles: {
-
-      },
-      clearBtnStyles: {
-
-      },
+      rowTextStyles: {},
+      clearBtnStyles: {},
       containerStyles: {
         zIndex: 999,
         width: 300,
-        backgroundColor: textInputStyles.backgroundColor || 'white'
+        backgroundColor: textInputStyles.backgroundColor || 'white',
       },
-      textInputStyles: { // textInput Styles
+      textInputStyles: {
+        // textInput Styles
         paddingLeft: 5,
         paddingRight: 5,
         flex: 1,
         alignItems: 'center',
-        height: 40
-      }
+        height: 40,
+      },
     }
   }
   constructor (props) {
@@ -86,7 +81,7 @@ export default class AutoSuggest extends Component {
     this.state = {
       TIWidth: null,
       results: [],
-      currentInput: null
+      currentInput: null,
     }
   }
   componentDidMount () {
@@ -100,26 +95,31 @@ export default class AutoSuggest extends Component {
     })
   }
   setCurrentInput (currentInput) {
-    this.setState({currentInput})
+    this.setState({ currentInput })
   }
 
   clearInputAndTerms () {
     this.refs.TI.clear()
     this.clearTerms()
   }
-  clearTerms () { this.setState({results: []}) }
-  addAllTerms () { this.setState({results: this.props.terms}) }
+  clearTerms () {
+    this.setState({ results: [] })
+  }
+  addAllTerms () {
+    this.setState({ results: this.props.terms })
+  }
   searchTerms (currentInput) {
     this.setState({ currentInput })
     debounce(300, () => {
       this.getAndSetWidth()
-      const findMatch = (term1, term2) => term1.toLowerCase().indexOf(term2.toLowerCase()) > -1
+      const findMatch = (term1, term2) =>
+        term1.toLowerCase().indexOf(term2.toLowerCase()) > -1
       const results = this.props.terms.filter(eachTerm => {
         if (findMatch(eachTerm, currentInput)) return eachTerm
       })
 
       const inputIsEmpty = !!(currentInput.length <= 0)
-      this.setState({results: inputIsEmpty ? [] : results}) // if input is empty don't show any results
+      this.setState({ results: inputIsEmpty ? [] : results }) // if input is empty don't show any results
     })()
   }
 
@@ -130,11 +130,18 @@ export default class AutoSuggest extends Component {
   }
   getCombinedStyles (styleName) {
     let styleObj
-    if (typeof this.props.styleName !== 'object') { // this is if its a stylesheet reference
-      styleObj = StyleSheet.flatten([this.getInitialStyles()[styleName], this.props[styleName]])
+    if (typeof this.props.styleName !== 'object') {
+      // this is if its a stylesheet reference
+      styleObj = StyleSheet.flatten([
+        this.getInitialStyles()[styleName],
+        this.props[styleName],
+      ])
     } else {
       // combine the  initial i.e default styles into one object.
-      styleObj = { ...this.getInitialStyles()[styleName], ...this.props[styleName] }
+      styleObj = {
+        ...this.getInitialStyles()[styleName],
+        ...this.props[styleName],
+      }
     }
     return styleObj
   }
@@ -146,65 +153,82 @@ export default class AutoSuggest extends Component {
       clearBtn,
       clearBtnVisibility,
       onChangeTextDebounce,
-      onItemPress
+      onItemPress,
     } = this.props
     return (
       <View style={this.getCombinedStyles('containerStyles')}>
-      <View
-      ref="TIContainer"
-      style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
+        <View
+          ref='TIContainer'
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
           <TextInput
-              {...otherTextInputProps}
-              placeholderTextColor={placeholderTextColor}
-              ref="TI"
-              spellCheck={false}
-              defaultValue={this.state.currentInput}
-              onChangeText={(el) => {
-                this.searchTerms(el)
-                debounce(onChangeTextDebounce, this.props.onChangeText(el))
-              }}
-              placeholder={placeholder}
-              style={this.getCombinedStyles('textInputStyles')}
-              />
+            {...otherTextInputProps}
+            placeholderTextColor={placeholderTextColor}
+            ref='TI'
+            spellCheck={false}
+            defaultValue={this.state.currentInput}
+            onChangeText={el => {
+              this.searchTerms(el)
+              debounce(onChangeTextDebounce, this.props.onChangeText(el))
+            }}
+            placeholder={placeholder}
+            style={this.getCombinedStyles('textInputStyles')}
+          />
 
-            { clearBtn // for if the user just wants the default clearBtn
-              ? <TouchableOpacity onPress={() => this.clearInputAndTerms()}>
-                { clearBtn }
-              </TouchableOpacity>
-            : false }
+          {clearBtn ? ( // for if the user just wants the default clearBtn
+            <TouchableOpacity onPress={() => this.clearInputAndTerms()}>
+              {clearBtn}
+            </TouchableOpacity>
+          ) : (
+            false
+          )}
 
-            { !clearBtn && clearBtnVisibility // for if the user passes a custom btn comp.
-              ? <Button style={this.getCombinedStyles('clearBtnStyles')} title="Clear" onPress={() => this.clearInputAndTerms()} />
-              : false
-            }
-         </View>
-         <View>
-            <ListView style={{position: 'absolute', width: this.state.TIWidth, backgroundColor: 'white', zIndex: 3}}
-              keyboardShouldPersistTaps={version >= '0.4.0' ? 'always' : true}
-              initialListSize={15}
-              enableEmptySections
-              dataSource={ds.cloneWithRows(this.state.results)}
-              renderRow={(rowData, sectionId, rowId, highlightRow) =>
-                      <RowWrapper
-                        styles={this.getCombinedStyles('rowWrapperStyles')}
-                      >
-                        <TouchableOpacity
-                          activeOpacity={0.5 /* when you touch it the text color grimaces */}
-                          onPress={() => {
-                            this.onItemPress(this.state.results[rowId])
-                            if (onItemPress) onItemPress(this.state.results[rowId])
-                          }
-                        }
-                          >
-                            <Text style={this.getCombinedStyles('rowTextStyles')}>{rowData}</Text>
-                          </TouchableOpacity>
-                      </RowWrapper>
-          }
-              />
-              </View>
-
-    </View>
-
+          {!clearBtn && clearBtnVisibility ? ( // for if the user passes a custom btn comp.
+            <Button
+              style={this.getCombinedStyles('clearBtnStyles')}
+              title='Clear'
+              onPress={() => this.clearInputAndTerms()}
+            />
+          ) : (
+            false
+          )}
+        </View>
+        <View>
+          <ListView
+            style={{
+              position: 'absolute',
+              width: this.state.TIWidth,
+              backgroundColor: 'white',
+              zIndex: 3,
+            }}
+            keyboardShouldPersistTaps='always'
+            initialListSize={15}
+            enableEmptySections
+            dataSource={ds.cloneWithRows(this.state.results)}
+            renderRow={(rowData, sectionId, rowId, highlightRow) => (
+              <RowWrapper styles={this.getCombinedStyles('rowWrapperStyles')}>
+                <TouchableOpacity
+                  activeOpacity={
+                    0.5 /* when you touch it the text color grimaces */
+                  }
+                  onPress={() => {
+                    this.onItemPress(this.state.results[rowId])
+                    if (onItemPress) onItemPress(this.state.results[rowId])
+                  }}
+                >
+                  <Text style={this.getCombinedStyles('rowTextStyles')}>
+                    {rowData}
+                  </Text>
+                </TouchableOpacity>
+              </RowWrapper>
+            )}
+          />
+        </View>
+      </View>
     )
   }
 }
@@ -215,19 +239,21 @@ class RowWrapper extends Component {
 
     this.defaultTransitionDuration = 500
     this.state = {
-      opacity: new Animated.Value(0)
+      opacity: new Animated.Value(0),
     }
   }
   componentDidMount () {
     Animated.timing(this.state.opacity, {
       toValue: 1,
-      duration: this.defaultTransitionDuration
+      duration: this.defaultTransitionDuration,
     }).start()
   }
   render () {
     return (
       <TouchableWithoutFeedback>
-        <Animated.View style={{...this.props.styles, opacity: this.state.opacity }}>
+        <Animated.View
+          style={{ ...this.props.styles, opacity: this.state.opacity }}
+        >
           {this.props.children}
         </Animated.View>
       </TouchableWithoutFeedback>
