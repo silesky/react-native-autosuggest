@@ -14,6 +14,7 @@ import {
   Button,
 } from 'react-native'
 import debounce from '../vendor/throttle-debounce/debounce'
+
 const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
 
 export default class AutoSuggest extends Component {
@@ -48,12 +49,12 @@ export default class AutoSuggest extends Component {
     currentInput: null,
   }
 
-  componentDidMount() {
+  componentDidMount () {
     // when user hits the return button, clear the terms
     Keyboard.addListener('keyboardDidHide', () => this.clearTerms())
   }
 
-  getInitialStyles() {
+  getInitialStyles () {
     const { textInputStyles } = this.props
     return {
       rowWrapperStyles: {
@@ -85,13 +86,13 @@ export default class AutoSuggest extends Component {
     }
   }
 
-  getAndSetWidth() {
+  getAndSetWidth () {
     this.textInput.measure((ox, oy, width, ...rest) => {
       this.setState({ textInputWidth: width })
     })
   }
 
-  clearInputAndTerms() {
+  clearInputAndTerms () {
     this.textInput.clear()
     this.clearTerms()
   }
@@ -100,7 +101,7 @@ export default class AutoSuggest extends Component {
     this.setState({ results: [] })
   }
 
-  addAllTerms() {
+  addAllTerms () {
     this.setState({ results: this.props.terms })
   }
 
@@ -129,7 +130,7 @@ export default class AutoSuggest extends Component {
     this.clearTerms()
   }
 
-  getCombinedStyles(styleName) {
+  getCombinedStyles (styleName) {
     let styleObj
     if (typeof this.props.styleName !== 'object') {
       // this is if its a stylesheet reference
@@ -147,7 +148,7 @@ export default class AutoSuggest extends Component {
     return styleObj
   }
 
-  render() {
+  render () {
     const {
       otherTextInputProps,
       placeholder,
@@ -156,7 +157,7 @@ export default class AutoSuggest extends Component {
       clearBtnVisibility,
       onChangeTextDebounce,
       onItemPress,
-      onLayout
+      onLayout,
     } = this.props
     return (
       <View style={this.getCombinedStyles('containerStyles')}>
@@ -188,8 +189,8 @@ export default class AutoSuggest extends Component {
               {clearBtn}
             </TouchableOpacity>
           ) : (
-              false
-            )}
+            false
+          )}
 
           {!clearBtn && clearBtnVisibility ? ( // for if the user passes a custom btn comp.
             <Button
@@ -198,12 +199,12 @@ export default class AutoSuggest extends Component {
               onPress={() => this.clearInputAndTerms()}
             />
           ) : (
-              false
-            )}
+            false
+          )}
         </View>
         <View>
           <ListView
-            onLayout={(e) => onLayout(e.nativeEvent.layout.height)}
+            onLayout={e => onLayout(e.nativeEvent.layout.height)}
             style={{
               position: 'absolute',
               width: this.state.textInputWidth,
@@ -217,9 +218,6 @@ export default class AutoSuggest extends Component {
             renderRow={(rowData, sectionId, rowId, highlightRow) => (
               <RowWrapper styles={this.getCombinedStyles('rowWrapperStyles')}>
                 <TouchableOpacity
-                  activeOpacity={
-                    0.5 /* when you touch it the text color grimaces */
-                  }
                   onPress={() => {
                     this.onItemPress(this.state.results[rowId])
                     if (onItemPress) onItemPress(this.state.results[rowId])
@@ -245,14 +243,14 @@ class RowWrapper extends Component {
     opacity: new Animated.Value(0),
   }
 
-  componentDidMount() {
+  componentDidMount () {
     Animated.timing(this.state.opacity, {
       toValue: 1,
       duration: this.defaultTransitionDuration,
     }).start()
   }
 
-  render() {
+  render () {
     return (
       <TouchableWithoutFeedback>
         <Animated.View
