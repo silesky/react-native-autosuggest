@@ -65,12 +65,13 @@ export default class AutoSuggest extends Component {
         opacity: 0.8,
         borderTopColor: 'lightgrey',
         borderBottomColor: 'lightgrey',
-        borderBottomWidth: 0.2,
+        backgroundColor: 'transparent',
       },
       rowTextStyles: {},
       clearBtnStyles: {},
       containerStyles: {
         zIndex: 999,
+        flex: 1,
         width: 300,
         backgroundColor: textInputStyles.backgroundColor || 'white',
       },
@@ -235,7 +236,7 @@ export default class AutoSuggest extends Component {
 }
 
 class RowWrapper extends Component {
-  static defaultTransitionDuration = 500
+  static defaultTransitionDuration = 200
 
   state = {
     opacity: new Animated.Value(0),
