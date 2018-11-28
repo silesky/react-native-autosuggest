@@ -4,7 +4,6 @@ import PropTypes from 'prop-types'
 import {
   Animated,
   StyleSheet,
-  Text,
   TextInput,
   ListView,
   TouchableOpacity,
@@ -158,6 +157,7 @@ export default class AutoSuggest extends Component {
       onChangeTextDebounce,
       onItemPress,
       onLayout,
+      Content,
     } = this.props
     return (
       <View style={this.getCombinedStyles('containerStyles')}>
@@ -223,9 +223,7 @@ export default class AutoSuggest extends Component {
                     if (onItemPress) onItemPress(this.state.results[rowId])
                   }}
                 >
-                  <Text style={this.getCombinedStyles('rowTextStyles')}>
-                    {rowData}
-                  </Text>
+                  <Content data={rowData} />
                 </TouchableOpacity>
               </RowWrapper>
             )}
