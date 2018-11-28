@@ -59,14 +59,14 @@ export default class AutoSuggest extends Component {
     return {
       rowWrapperStyles: {
         zIndex: 999,
-        paddingTop: 10,
-        paddingBottom: 10,
+        paddingTop: 15,
+        paddingBottom: 15,
         paddingLeft: 5,
         paddingRight: 5,
         opacity: 0.8,
         borderTopColor: 'lightgrey',
         borderBottomColor: 'lightgrey',
-        borderBottomWidth: 1,
+        borderBottomWidth: 0.2,
       },
       rowTextStyles: {},
       clearBtnStyles: {},
