@@ -49,6 +49,8 @@ export default class AutoSuggest extends Component {
   }
 
   componentDidMount () {
+    const { value } = this.props
+    this.setState({ currentInput: value })
     // when user hits the return button, clear the terms
     Keyboard.addListener('keyboardDidHide', () => this.clearTerms())
   }
@@ -159,7 +161,6 @@ export default class AutoSuggest extends Component {
       onItemPress,
       onLayout,
       Content,
-      value,
     } = this.props
     return (
       <View style={this.getCombinedStyles('containerStyles')}>
@@ -184,9 +185,7 @@ export default class AutoSuggest extends Component {
             }}
             placeholder={placeholder}
             style={this.getCombinedStyles('textInputStyles')}
-          >
-            {value}
-          </TextInput>
+          />
 
           {clearBtn ? ( // for if the user just wants the default clearBtn
             <TouchableOpacity onPress={() => this.clearInputAndTerms()}>
