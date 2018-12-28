@@ -48,14 +48,18 @@ export default class AutoSuggest extends Component {
     currentInput: null,
   }
 
-  componentDidMount () {
+  componentDidMount() {
     const { value } = this.props
     this.setState({ currentInput: value })
     // when user hits the return button, clear the terms
     Keyboard.addListener('keyboardDidHide', () => this.clearTerms())
   }
 
-  getInitialStyles () {
+  componentWillUnmount() {
+    this.keyboardDidHideListener.remove();
+  }
+
+  getInitialStyles() {
     const { textInputStyles } = this.props
     return {
       rowWrapperStyles: {
@@ -88,13 +92,13 @@ export default class AutoSuggest extends Component {
     }
   }
 
-  getAndSetWidth () {
+  getAndSetWidth() {
     this.textInput.measure((ox, oy, width, ...rest) => {
       this.setState({ textInputWidth: width })
     })
   }
 
-  clearInputAndTerms () {
+  clearInputAndTerms() {
     this.textInput.clear()
     this.clearTerms()
   }
@@ -103,7 +107,7 @@ export default class AutoSuggest extends Component {
     this.setState({ results: [] })
   }
 
-  addAllTerms () {
+  addAllTerms() {
     this.setState({ results: this.props.terms })
   }
 
@@ -132,7 +136,7 @@ export default class AutoSuggest extends Component {
     this.clearTerms()
   }
 
-  getCombinedStyles (styleName) {
+  getCombinedStyles(styleName) {
     let styleObj
     if (typeof this.props.styleName !== 'object') {
       // this is if its a stylesheet reference
@@ -150,7 +154,7 @@ export default class AutoSuggest extends Component {
     return styleObj
   }
 
-  render () {
+  render() {
     const {
       otherTextInputProps,
       placeholder,
@@ -192,8 +196,8 @@ export default class AutoSuggest extends Component {
               {clearBtn}
             </TouchableOpacity>
           ) : (
-            false
-          )}
+              false
+            )}
 
           {!clearBtn && clearBtnVisibility ? ( // for if the user passes a custom btn comp.
             <Button
@@ -202,8 +206,8 @@ export default class AutoSuggest extends Component {
               onPress={() => this.clearInputAndTerms()}
             />
           ) : (
-            false
-          )}
+              false
+            )}
         </View>
         <View>
           <ListView
@@ -244,14 +248,14 @@ class RowWrapper extends Component {
     opacity: new Animated.Value(0),
   }
 
-  componentDidMount () {
+  componentDidMount() {
     Animated.timing(this.state.opacity, {
       toValue: 1,
       duration: this.defaultTransitionDuration,
     }).start()
   }
 
-  render () {
+  render() {
     return (
       <TouchableWithoutFeedback>
         <Animated.View
