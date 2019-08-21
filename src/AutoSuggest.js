@@ -11,7 +11,7 @@ import {
   View,
   Keyboard,
   TouchableWithoutFeedback,
-  Button,
+  Button
 } from 'react-native'
 import debounce from '../vendor/throttle-debounce/debounce'
 const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
@@ -31,6 +31,7 @@ export default class AutoSuggest extends Component {
     rowWrapperStyles: PropTypes.object,
     textInputStyles: PropTypes.object,
     terms: PropTypes.array,
+    isFromPrefix: PropTypes.bool
   }
 
   static defaultProps = {
@@ -40,12 +41,13 @@ export default class AutoSuggest extends Component {
     textInputStyles: {},
     otherTextInputProps: {},
     onChangeTextDebounce: 200,
+    isFromPrefix: true
   }
 
   state = {
     textInputWidth: null,
     results: [],
-    currentInput: null,
+    currentInput: null
   }
 
   componentDidMount () {
@@ -65,14 +67,14 @@ export default class AutoSuggest extends Component {
         opacity: 0.8,
         borderTopColor: 'lightgrey',
         borderBottomColor: 'lightgrey',
-        borderBottomWidth: 1,
+        borderBottomWidth: 1
       },
       rowTextStyles: {},
       clearBtnStyles: {},
       containerStyles: {
         zIndex: 999,
         width: 300,
-        backgroundColor: textInputStyles.backgroundColor || 'white',
+        backgroundColor: textInputStyles.backgroundColor || 'white'
       },
       textInputStyles: {
         // textInput Styles
@@ -80,8 +82,8 @@ export default class AutoSuggest extends Component {
         paddingRight: 5,
         flex: 1,
         alignItems: 'center',
-        height: 40,
-      },
+        height: 40
+      }
     }
   }
 
@@ -112,8 +114,14 @@ export default class AutoSuggest extends Component {
     this.setState({ currentInput })
     debounce(300, () => {
       this.getAndSetWidth()
-      const findMatch = (term1, term2) =>
-        term1.toLowerCase().indexOf(term2.toLowerCase()) > -1
+      const isFromPrefix = this.props.isFromPrefix
+      const findMatch = (term1, term2) => {
+        if (isFromPrefix) {
+          return term1.toLowerCase().indexOf(term2.toLowerCase()) === 0
+        } else {
+          return term1.toLowerCase().indexOf(term2.toLowerCase()) > -1
+        }
+      }
       const results = this.props.terms.filter(eachTerm => {
         if (findMatch(eachTerm, currentInput)) return eachTerm
       })
@@ -135,13 +143,13 @@ export default class AutoSuggest extends Component {
       // this is if its a stylesheet reference
       styleObj = StyleSheet.flatten([
         this.getInitialStyles()[styleName],
-        this.props[styleName],
+        this.props[styleName]
       ])
     } else {
       // combine the  initial i.e default styles into one object.
       styleObj = {
         ...this.getInitialStyles()[styleName],
-        ...this.props[styleName],
+        ...this.props[styleName]
       }
     }
     return styleObj
@@ -155,7 +163,7 @@ export default class AutoSuggest extends Component {
       clearBtn,
       clearBtnVisibility,
       onChangeTextDebounce,
-      onItemPress,
+      onItemPress
     } = this.props
     return (
       <View style={this.getCombinedStyles('containerStyles')}>
@@ -163,7 +171,7 @@ export default class AutoSuggest extends Component {
           style={{
             flexDirection: 'row',
             justifyContent: 'center',
-            alignItems: 'center',
+            alignItems: 'center'
           }}
         >
           <TextInput
@@ -206,7 +214,7 @@ export default class AutoSuggest extends Component {
               position: 'absolute',
               width: this.state.textInputWidth,
               backgroundColor: 'white',
-              zIndex: 3,
+              zIndex: 3
             }}
             keyboardShouldPersistTaps='always'
             initialListSize={15}
@@ -237,28 +245,28 @@ export default class AutoSuggest extends Component {
 }
 
 class RowWrapper extends Component {
-    static defaultTransitionDuration = 500
+  static defaultTransitionDuration = 500
 
-    state = {
-      opacity: new Animated.Value(0),
-    }
+  state = {
+    opacity: new Animated.Value(0)
+  }
 
-    componentDidMount () {
-      Animated.timing(this.state.opacity, {
-        toValue: 1,
-        duration: this.defaultTransitionDuration,
-      }).start()
-    }
+  componentDidMount () {
+    Animated.timing(this.state.opacity, {
+      toValue: 1,
+      duration: this.defaultTransitionDuration
+    }).start()
+  }
 
-    render () {
-      return (
-        <TouchableWithoutFeedback>
-          <Animated.View
-            style={{ ...this.props.styles, opacity: this.state.opacity }}
-          >
-            {this.props.children}
-          </Animated.View>
-        </TouchableWithoutFeedback>
-      )
-    }
+  render () {
+    return (
+      <TouchableWithoutFeedback>
+        <Animated.View
+          style={{ ...this.props.styles, opacity: this.state.opacity }}
+        >
+          {this.props.children}
+        </Animated.View>
+      </TouchableWithoutFeedback>
+    )
+  }
 }
