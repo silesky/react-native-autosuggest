@@ -1,3 +1,6 @@
+# DEPRECATED
+- Hey guys, I have not worked on React Native in several years and there has been a lot of churn. As such, this project is waaaay out-of-date. =)
+
 # AutoSuggest TextInput Component
 
 
